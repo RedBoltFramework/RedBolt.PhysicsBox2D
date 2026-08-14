@@ -1,0 +1,7 @@
+<Project>
+  <PropertyGroup>
+    <RedBoltPhysicsBox2DEnabled Condition="$([System.String]::Copy('$(_RedBoltEnableModulesList)').Contains(',all,')) or $([System.String]::Copy('$(_RedBoltEnableModulesList)').Contains(',physics-box2d,')) or $([System.String]::Copy('$(_RedBoltEnableModulesList)').Contains(',physics-2d,'))">true</RedBoltPhysicsBox2DEnabled>
+    <RedBoltPhysicsBox2DEnabled Condition="'$(RedBoltPhysicsBox2DEnabled)' == '' and !$([System.String]::Copy('$(_RedBoltDisableModulesList)').Contains(',all,')) and !$([System.String]::Copy('$(_RedBoltDisableModulesList)').Contains(',physics-box2d,')) and !$([System.String]::Copy('$(_RedBoltDisableModulesList)').Contains(',physics-2d,'))">true</RedBoltPhysicsBox2DEnabled>
+    <RedBoltPhysicsBox2DEnabled Condition="'$(RedBoltPhysicsBox2DEnabled)' == ''">false</RedBoltPhysicsBox2DEnabled>
+  </PropertyGroup>
+</Project>
