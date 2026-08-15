@@ -5,6 +5,8 @@
     <ApplicationDisplayVersion>0.1.0</ApplicationDisplayVersion>
     <ApplicationVersion>1</ApplicationVersion>
     <AndroidPackageFormat>apk</AndroidPackageFormat>
+    <!-- The .NET Android compression task caches one ABI per MSBuild process; this sample builds x64 and arm64 in one traversal. -->
+    <AndroidEnableAssemblyCompression>false</AndroidEnableAssemblyCompression>
     <AndroidStripNativeLibraries>true</AndroidStripNativeLibraries>
     <EmbedAssembliesIntoApk>true</EmbedAssembliesIntoApk>
     <OutputType>Exe</OutputType>
@@ -54,8 +56,10 @@
   </Target>
   <Target Name="RedBoltCollectAndroidNativeLibraries" BeforeTargets="_BuildApkEmbed;_BuildApkFastDev" DependsOnTargets="RedBoltPrepareAndroidRuntime">
     <ItemGroup>
-      <AndroidNativeLibrary Include="$(RedBoltBaseAndroidNativeOutput)/*.so" />
-      <AndroidNativeLibrary Include="$(RedBoltPhysicsBox2DAndroidNativeOutput)/*.so" />
+      <AndroidNativeLibrary Remove="$(RedBoltPhysicsBox2DAndroidNativeOutput)/libRedBolt.Native.*.so" />
+      <AndroidNativeLibrary Include="$(RedBoltBaseAndroidNativeOutput)/libRedBolt.Native.*.so" />
+      <AndroidNativeLibrary Include="$(RedBoltBaseAndroidNativeOutput)/libc++_shared.so" />
+      <AndroidNativeLibrary Include="$(RedBoltPhysicsBox2DAndroidNativeOutput)/libRedBolt.Native.*.so" />
     </ItemGroup>
   </Target>
   <Target Name="RedBoltFinalizeAndroidPackage" AfterTargets="Build" Condition="'$(RedBoltProjectBuildEnabled)' == 'true'">
@@ -63,7 +67,11 @@
       <_RedBoltSignedApk>$(RedBoltOutputDir)/$(ApplicationId)-Signed.apk</_RedBoltSignedApk>
       <_RedBoltPackagedApk>$(RedBoltAndroidPackageOutputDirectory)/RedBolt.PhysicsBox2D.Sample.Android.apk</_RedBoltPackagedApk>
     </PropertyGroup>
+    <Error Condition="!Exists('$(_RedBoltSignedApk)')"
+           Text="Android package was not produced at '$(_RedBoltSignedApk)'." />
+    <MakeDir Directories="$(RedBoltAndroidPackageOutputDirectory)" />
     <Copy SourceFiles="$(_RedBoltSignedApk)" DestinationFiles="$(_RedBoltPackagedApk)" SkipUnchangedFiles="true" />
+    <Message Importance="high" Text="Android package: $(_RedBoltPackagedApk)" />
     <MSBuild Projects="$(MSBuildProjectFullPath)" Targets="Build" BuildInParallel="false"
              Condition="'$(BuildingSolutionFile)' != 'true' and '$(RedBoltPlatform)' == 'android-x64' and '$(RedBoltBuildAllAndroidPackages)' == 'true' and '$(RedBoltAndroidPackageInnerBuild)' != 'true'"
              Properties="Configuration=$(Configuration);RedBoltPlatform=android-arm64;RedBoltNativePreset=android-arm64;RedBoltBuildAllAndroidPackages=false;RedBoltAndroidPackageInnerBuild=true" />

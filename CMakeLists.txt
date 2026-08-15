@@ -16,6 +16,16 @@ if(ANDROID)
     add_link_options("-Wl,-z,max-page-size=16384")
 endif()
 
+# LLVM-MinGW's COFF linker supports whole-archive, but not the GNU ld
+# push-state/pop-state pair emitted by CMake's default feature definition.
+if(MINGW)
+    set(CMAKE_CXX_LINK_LIBRARY_USING_WHOLE_ARCHIVE
+        "LINKER:--whole-archive"
+        "<LINK_ITEM>"
+        "LINKER:--no-whole-archive")
+    set(CMAKE_CXX_LINK_LIBRARY_USING_WHOLE_ARCHIVE_SUPPORTED TRUE)
+endif()
+
 set(REDBOLT_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/../RedBolt" CACHE PATH "RedBolt source root")
 set(REDBOLT_SHARPCPP_ROOT "${REDBOLT_ROOT}/extern/SharpCpp" CACHE PATH "SharpCpp source root")
 set(REDBOLT_DEPENDENCY_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/extern" CACHE PATH "RedBolt.PhysicsBox2D dependency cache")

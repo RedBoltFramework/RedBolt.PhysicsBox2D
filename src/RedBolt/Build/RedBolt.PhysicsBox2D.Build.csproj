@@ -4,11 +4,11 @@
     <EnableDefaultItems>false</EnableDefaultItems>
     <Configuration Condition="'$(Configuration)' == ''">Debug</Configuration>
     <RedBoltTestsProject>$([System.IO.Path]::GetFullPath('$(RedBoltPhysicsBox2DRoot)/../RedBolt.Tests/RedBolt.Tests.csproj'))</RedBoltTestsProject>
-    <_RedBoltLinuxProperties>Configuration=$(Configuration);BuildProjectReferences=false;RedBoltPlatform=linux-x64;RedBoltNativePreset=linux-x64</_RedBoltLinuxProperties>
-    <_RedBoltWindowsProperties>Configuration=$(Configuration);BuildProjectReferences=false;RedBoltPlatform=win-x64;RedBoltNativePreset=win-x64</_RedBoltWindowsProperties>
-    <_RedBoltAndroidX64Properties>Configuration=$(Configuration);BuildProjectReferences=false;RedBoltPlatform=android-x64;RedBoltNativePreset=android-x64;RedBoltTargetFramework=net10.0-android;RedBoltBuildAllAndroidPackages=false</_RedBoltAndroidX64Properties>
-    <_RedBoltAndroidArm64Properties>Configuration=$(Configuration);BuildProjectReferences=false;RedBoltPlatform=android-arm64;RedBoltNativePreset=android-arm64;RedBoltTargetFramework=net10.0-android;RedBoltBuildAllAndroidPackages=false</_RedBoltAndroidArm64Properties>
-    <_RedBoltWebProperties>Configuration=$(Configuration);BuildProjectReferences=false;RedBoltPlatform=browser-wasm;RedBoltNativePreset=browser-wasm</_RedBoltWebProperties>
+    <_RedBoltLinuxProperties>Configuration=$(Configuration);RedBoltPlatform=linux-x64;RedBoltNativePreset=linux-x64</_RedBoltLinuxProperties>
+    <_RedBoltWindowsProperties>Configuration=$(Configuration);RedBoltPlatform=win-x64;RedBoltNativePreset=win-x64</_RedBoltWindowsProperties>
+    <_RedBoltAndroidX64Properties>Configuration=$(Configuration);RedBoltPlatform=android-x64;RedBoltNativePreset=android-x64;RedBoltTargetFramework=net10.0-android;RedBoltBuildAllAndroidPackages=false</_RedBoltAndroidX64Properties>
+    <_RedBoltAndroidArm64Properties>Configuration=$(Configuration);RedBoltPlatform=android-arm64;RedBoltNativePreset=android-arm64;RedBoltTargetFramework=net10.0-android;RedBoltBuildAllAndroidPackages=false</_RedBoltAndroidArm64Properties>
+    <_RedBoltWebProperties>Configuration=$(Configuration);RedBoltPlatform=browser-wasm;RedBoltNativePreset=browser-wasm</_RedBoltWebProperties>
   </PropertyGroup>
   <ItemGroup>
     <_RedBoltPhysicsBox2DDesktopProject Include="$(RedBolt2DRoot)/src/RedBolt/2D/RedBolt.2D.csproj" Condition="'$(RedBoltPhysicsBox2DEnabled)' == 'true'" />
