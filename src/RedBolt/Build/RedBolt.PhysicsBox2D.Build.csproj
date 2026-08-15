@@ -17,5 +17,5 @@
   <Target Name="RedBoltPhysicsBox2DValidateDependency" BeforeTargets="RedBoltExternalValidateBuildConfiguration">
     <Error Condition="'$(RedBoltPhysicsBox2DEnabled)' == 'true' and !Exists('$(RedBolt2DRoot)/src/RedBolt/2D/RedBolt.2D.csproj')" Text="The physics samples require sibling RedBolt.2D at '$(RedBolt2DRoot)'." />
   </Target>
-  <Import Project="$(RedBoltRoot)/src/RedBolt/ExternalModule/Build.targets" />
+  <Import Project="$(RedBoltRoot)/src/RedBolt/Build/Build.targets" />
 </Project>

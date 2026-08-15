@@ -4,5 +4,5 @@
     <RedBoltExternalPackageRepositoryUrl>https://github.com/RedBoltFramework/RedBolt.PhysicsBox2D.git</RedBoltExternalPackageRepositoryUrl>
     <RedBoltExternalPackageTags>RedBolt game-engine csharp dotnet 2d box2d</RedBoltExternalPackageTags>
   </PropertyGroup>
-  <Import Project="../../../RedBolt/src/RedBolt/ExternalModule/NuGetPackage.targets" />
+  <Import Project="../../../RedBolt/src/RedBolt/Build/NuGetPackage.targets" />
 </Project>

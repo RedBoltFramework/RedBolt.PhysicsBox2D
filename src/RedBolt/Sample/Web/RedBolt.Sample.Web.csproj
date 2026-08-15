@@ -11,5 +11,5 @@
     <RedBoltWebCoreDataResource Include="$(RedBolt2DRoot)/bin/CoreData/**/*" />
     <RedBoltWebDataResource Include="$(RedBolt2DRoot)/bin/Data/**/*" />
   </ItemGroup>
-  <Import Project="$(RedBoltRoot)/src/RedBolt/ExternalModule/WebSample.targets" />
+  <Import Project="$(RedBoltRoot)/src/RedBolt/Build/WebSample.targets" />
 </Project>

@@ -13,5 +13,5 @@
     <AndroidAsset Include="$(RedBolt2DRoot)/bin/CoreData/**/*" Link="CoreData/%(RecursiveDir)%(Filename)%(Extension)" />
     <AndroidAsset Include="$(RedBolt2DRoot)/bin/Data/**/*" Link="Data/%(RecursiveDir)%(Filename)%(Extension)" />
   </ItemGroup>
-  <Import Project="$(RedBoltRoot)/src/RedBolt/ExternalModule/AndroidSample.targets" />
+  <Import Project="$(RedBoltRoot)/src/RedBolt/Build/AndroidSample.targets" />
 </Project>
