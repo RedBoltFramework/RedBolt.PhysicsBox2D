@@ -3,51 +3,19 @@
     <TargetFramework>net10.0</TargetFramework>
     <EnableDefaultItems>false</EnableDefaultItems>
     <Configuration Condition="'$(Configuration)' == ''">Debug</Configuration>
-    <RedBoltTestsProject>$([System.IO.Path]::GetFullPath('$(RedBoltPhysicsBox2DRoot)/../RedBolt.Tests/RedBolt.Tests.csproj'))</RedBoltTestsProject>
-    <_RedBoltModuleProperties>RedBoltActionsEnabled=$(RedBoltActionsEnabled);RedBoltAudioEnabled=$(RedBoltAudioEnabled);RedBoltDearImGuiEnabled=$(RedBoltDearImGuiEnabled);RedBoltGlowEnabled=$(RedBoltGlowEnabled);RedBoltIKEnabled=$(RedBoltIKEnabled);RedBoltNavigationEnabled=$(RedBoltNavigationEnabled);RedBoltNetworkEnabled=$(RedBoltNetworkEnabled);RedBoltParticlesEnabled=$(RedBoltParticlesEnabled);RedBoltRmlUIEnabled=$(RedBoltRmlUIEnabled);RedBoltUtilityEnabled=$(RedBoltUtilityEnabled);RedBoltEditorEnabled=$(RedBoltEditorEnabled);RedBoltSamplesEnabled=$(RedBoltSamplesEnabled);RedBoltTestsEnabled=$(RedBoltTestsEnabled);RedBolt2DEnabled=$(RedBolt2DEnabled);RedBoltPhysicsBox2DEnabled=$(RedBoltPhysicsBox2DEnabled)</_RedBoltModuleProperties>
-    <_RedBoltLinuxProperties>Configuration=$(Configuration);RedBoltPlatform=linux-x64;RedBoltNativePreset=linux-x64;$(_RedBoltModuleProperties)</_RedBoltLinuxProperties>
-    <_RedBoltWindowsProperties>Configuration=$(Configuration);RedBoltPlatform=win-x64;RedBoltNativePreset=win-x64;$(_RedBoltModuleProperties)</_RedBoltWindowsProperties>
-    <_RedBoltAndroidX64Properties>Configuration=$(Configuration);RedBoltPlatform=android-x64;RedBoltNativePreset=android-x64;RedBoltTargetFramework=net10.0-android;RedBoltBuildAllAndroidPackages=false;$(_RedBoltModuleProperties)</_RedBoltAndroidX64Properties>
-    <_RedBoltAndroidArm64Properties>Configuration=$(Configuration);RedBoltPlatform=android-arm64;RedBoltNativePreset=android-arm64;RedBoltTargetFramework=net10.0-android;RedBoltBuildAllAndroidPackages=false;$(_RedBoltModuleProperties)</_RedBoltAndroidArm64Properties>
-    <_RedBoltWebProperties>Configuration=$(Configuration);RedBoltPlatform=browser-wasm;RedBoltNativePreset=browser-wasm;$(_RedBoltModuleProperties)</_RedBoltWebProperties>
   </PropertyGroup>
   <ItemGroup>
-    <_RedBoltPhysicsBox2DDesktopProject Include="$(RedBolt2DRoot)/src/RedBolt/2D/RedBolt.2D.csproj" Condition="'$(RedBoltPhysicsBox2DEnabled)' == 'true'" />
-    <_RedBoltPhysicsBox2DDesktopProject Include="../Native/RedBolt.PhysicsBox2D.Native.csproj" Condition="'$(RedBoltPhysicsBox2DEnabled)' == 'true'" />
-    <_RedBoltPhysicsBox2DDesktopProject Include="../Native/Box2D/RedBolt.Bindings.Box2D.csproj" Condition="'$(RedBoltPhysicsBox2DEnabled)' == 'true'" />
-    <_RedBoltPhysicsBox2DDesktopProject Include="../PhysicsBox2D/RedBolt.PhysicsBox2D.csproj" Condition="'$(RedBoltPhysicsBox2DEnabled)' == 'true'" />
-    <_RedBoltPhysicsBox2DDesktopProject Include="../Sample/*/*.csproj" Exclude="../Sample/Android/*.csproj;../Sample/Web/*.csproj" Condition="'$(RedBoltSamplesEnabled)' == 'true'" />
-    <_RedBoltPhysicsBox2DDesktopProject Include="$(RedBoltTestsProject)" Condition="'$(RedBoltTestsEnabled)' == 'true' and Exists('$(RedBoltTestsProject)')" />
-    <_RedBoltPhysicsBox2DAndroidProject Include="$(RedBolt2DRoot)/src/RedBolt/2D/RedBolt.2D.csproj" Condition="'$(RedBoltPhysicsBox2DEnabled)' == 'true'" />
-    <_RedBoltPhysicsBox2DAndroidProject Include="../Native/RedBolt.PhysicsBox2D.Native.Android.csproj" Condition="'$(RedBoltPhysicsBox2DEnabled)' == 'true'" />
-    <_RedBoltPhysicsBox2DAndroidProject Include="../Native/Box2D/RedBolt.Bindings.Box2D.csproj" Condition="'$(RedBoltPhysicsBox2DEnabled)' == 'true'" />
-    <_RedBoltPhysicsBox2DAndroidProject Include="../PhysicsBox2D/RedBolt.PhysicsBox2D.csproj" Condition="'$(RedBoltPhysicsBox2DEnabled)' == 'true'" />
-    <_RedBoltPhysicsBox2DAndroidProject Include="../Sample/Android/RedBolt.Sample.Android.csproj" Condition="'$(RedBoltSamplesEnabled)' == 'true'" />
-    <_RedBoltPhysicsBox2DWebProject Include="$(RedBolt2DRoot)/src/RedBolt/2D/RedBolt.2D.csproj" Condition="'$(RedBoltPhysicsBox2DEnabled)' == 'true'" />
-    <_RedBoltPhysicsBox2DWebProject Include="../Native/RedBolt.PhysicsBox2D.Native.Web.csproj" Condition="'$(RedBoltPhysicsBox2DEnabled)' == 'true'" />
-    <_RedBoltPhysicsBox2DWebProject Include="../Native/Box2D/RedBolt.Bindings.Box2D.csproj" Condition="'$(RedBoltPhysicsBox2DEnabled)' == 'true'" />
-    <_RedBoltPhysicsBox2DWebProject Include="../PhysicsBox2D/RedBolt.PhysicsBox2D.csproj" Condition="'$(RedBoltPhysicsBox2DEnabled)' == 'true'" />
-    <_RedBoltPhysicsBox2DWebProject Include="../Sample/Web/RedBolt.Sample.Web.csproj" Condition="'$(RedBoltSamplesEnabled)' == 'true'" />
+    <_RedBoltExternalDesktopProject Include="$(RedBolt2DRoot)/src/RedBolt/2D/RedBolt.2D.csproj" Condition="'$(RedBoltPhysicsBox2DEnabled)' == 'true'" />
+    <_RedBoltExternalDesktopProject Include="../Native/RedBolt.PhysicsBox2D.Native.csproj;../Native/Box2D/RedBolt.Bindings.Box2D.csproj;../PhysicsBox2D/RedBolt.PhysicsBox2D.csproj" Condition="'$(RedBoltPhysicsBox2DEnabled)' == 'true'" />
+    <_RedBoltExternalDesktopProject Include="../Sample/*/*.csproj" Exclude="../Sample/Android/*.csproj;../Sample/Web/*.csproj" Condition="'$(RedBoltSamplesEnabled)' == 'true'" />
+    <_RedBoltExternalDesktopProject Include="$(RedBoltTestsProject)" Condition="'$(RedBoltTestsEnabled)' == 'true' and Exists('$(RedBoltTestsProject)')" />
+    <_RedBoltExternalAndroidProject Include="$(RedBolt2DRoot)/src/RedBolt/2D/RedBolt.2D.csproj;../Native/RedBolt.PhysicsBox2D.Native.Android.csproj;../Native/Box2D/RedBolt.Bindings.Box2D.csproj;../PhysicsBox2D/RedBolt.PhysicsBox2D.csproj" Condition="'$(RedBoltPhysicsBox2DEnabled)' == 'true'" />
+    <_RedBoltExternalAndroidProject Include="../Sample/Android/RedBolt.Sample.Android.csproj" Condition="'$(RedBoltSamplesEnabled)' == 'true'" />
+    <_RedBoltExternalWebProject Include="$(RedBolt2DRoot)/src/RedBolt/2D/RedBolt.2D.csproj;../Native/RedBolt.PhysicsBox2D.Native.Web.csproj;../Native/Box2D/RedBolt.Bindings.Box2D.csproj;../PhysicsBox2D/RedBolt.PhysicsBox2D.csproj" Condition="'$(RedBoltPhysicsBox2DEnabled)' == 'true'" />
+    <_RedBoltExternalWebProject Include="../Sample/Web/RedBolt.Sample.Web.csproj" Condition="'$(RedBoltSamplesEnabled)' == 'true'" />
   </ItemGroup>
-  <Target Name="RedBoltPhysicsBox2DValidateBuildConfiguration">
+  <Target Name="RedBoltPhysicsBox2DValidateDependency" BeforeTargets="RedBoltExternalValidateBuildConfiguration">
     <Error Condition="'$(RedBoltPhysicsBox2DEnabled)' == 'true' and !Exists('$(RedBolt2DRoot)/src/RedBolt/2D/RedBolt.2D.csproj')" Text="The physics samples require sibling RedBolt.2D at '$(RedBolt2DRoot)'." />
-    <Error Condition="'$(RedBoltTestsEnabled)' == 'true' and !Exists('$(RedBoltTestsProject)' )" Text="The tests module is enabled, but '$(RedBoltTestsProject)' does not exist." />
   </Target>
-  <Target Name="RedBoltRestoreSelectedProjects" DependsOnTargets="RedBoltPhysicsBox2DValidateBuildConfiguration">
-    <MSBuild Projects="@(_RedBoltPhysicsBox2DDesktopProject)" Targets="Restore" BuildInParallel="false" Properties="$(_RedBoltLinuxProperties)" Condition="'$(RedBoltLinuxEnabled)' == 'true' and '$(RedBoltX64Enabled)' == 'true'" />
-    <MSBuild Projects="@(_RedBoltPhysicsBox2DDesktopProject)" Targets="Restore" BuildInParallel="false" Properties="$(_RedBoltWindowsProperties)" Condition="'$(RedBoltWindowsEnabled)' == 'true' and '$(RedBoltX64Enabled)' == 'true'" />
-    <MSBuild Projects="@(_RedBoltPhysicsBox2DAndroidProject)" Targets="Restore" BuildInParallel="false" Properties="$(_RedBoltAndroidX64Properties)" Condition="'$(RedBoltAndroidEnabled)' == 'true' and '$(RedBoltX64Enabled)' == 'true'" />
-    <MSBuild Projects="@(_RedBoltPhysicsBox2DAndroidProject)" Targets="Restore" BuildInParallel="false" Properties="$(_RedBoltAndroidArm64Properties)" Condition="'$(RedBoltAndroidEnabled)' == 'true' and '$(RedBoltArm64Enabled)' == 'true'" />
-    <MSBuild Projects="@(_RedBoltPhysicsBox2DWebProject)" Targets="Restore" BuildInParallel="false" Properties="$(_RedBoltWebProperties)" Condition="'$(RedBoltWebEnabled)' == 'true'" />
-  </Target>
-  <Target Name="RedBoltBuildSelectedProjects" DependsOnTargets="RedBoltPhysicsBox2DValidateBuildConfiguration">
-    <MSBuild Projects="@(_RedBoltPhysicsBox2DDesktopProject)" Targets="Build" BuildInParallel="false" RemoveProperties="BuildingSolutionFile;CurrentSolutionConfigurationContents" Properties="$(_RedBoltLinuxProperties)" Condition="'$(RedBoltLinuxEnabled)' == 'true' and '$(RedBoltX64Enabled)' == 'true'" />
-    <MSBuild Projects="@(_RedBoltPhysicsBox2DDesktopProject)" Targets="Build" BuildInParallel="false" RemoveProperties="BuildingSolutionFile;CurrentSolutionConfigurationContents" Properties="$(_RedBoltWindowsProperties)" Condition="'$(RedBoltWindowsEnabled)' == 'true' and '$(RedBoltX64Enabled)' == 'true'" />
-    <MSBuild Projects="@(_RedBoltPhysicsBox2DAndroidProject)" Targets="Build" BuildInParallel="false" RemoveProperties="BuildingSolutionFile;CurrentSolutionConfigurationContents" Properties="$(_RedBoltAndroidX64Properties)" Condition="'$(RedBoltAndroidEnabled)' == 'true' and '$(RedBoltX64Enabled)' == 'true'" />
-    <MSBuild Projects="@(_RedBoltPhysicsBox2DAndroidProject)" Targets="Build" BuildInParallel="false" RemoveProperties="BuildingSolutionFile;CurrentSolutionConfigurationContents" Properties="$(_RedBoltAndroidArm64Properties)" Condition="'$(RedBoltAndroidEnabled)' == 'true' and '$(RedBoltArm64Enabled)' == 'true'" />
-    <MSBuild Projects="@(_RedBoltPhysicsBox2DWebProject)" Targets="Build" BuildInParallel="false" RemoveProperties="BuildingSolutionFile;CurrentSolutionConfigurationContents" Properties="$(_RedBoltWebProperties)" Condition="'$(RedBoltWebEnabled)' == 'true'" />
-  </Target>
-  <Target Name="RedBoltCleanSelectedProjects">
-    <MSBuild Projects="@(_RedBoltPhysicsBox2DDesktopProject);@(_RedBoltPhysicsBox2DAndroidProject);@(_RedBoltPhysicsBox2DWebProject)" Targets="Clean" BuildInParallel="true" />
-  </Target>
+  <Import Project="$(RedBoltRoot)/src/RedBolt/ExternalModule/Build.targets" />
 </Project>

@@ -3,11 +3,8 @@
     <RedBoltPhysicsBox2DRoot>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory).'))</RedBoltPhysicsBox2DRoot>
     <RedBoltRoot Condition="'$(RedBoltRoot)' == ''">$([System.IO.Path]::GetFullPath('$(RedBoltPhysicsBox2DRoot)/../RedBolt'))</RedBoltRoot>
     <RedBolt2DRoot Condition="'$(RedBolt2DRoot)' == ''">$([System.IO.Path]::GetFullPath('$(RedBoltPhysicsBox2DRoot)/../RedBolt.2D'))</RedBolt2DRoot>
+    <RedBoltExternalModuleRoot>$(RedBoltPhysicsBox2DRoot)</RedBoltExternalModuleRoot>
+    <RedBoltExternalModuleName>RedBolt.PhysicsBox2D</RedBoltExternalModuleName>
   </PropertyGroup>
-  <Import Project="$(RedBoltRoot)/Directory.Solution.props" />
-  <PropertyGroup>
-    <RedBoltTraversalProject>$(RedBoltPhysicsBox2DRoot)/src/RedBolt/Build/RedBolt.PhysicsBox2D.Build.csproj</RedBoltTraversalProject>
-    <RedBoltSolutionBuildRoot>$(RedBoltPhysicsBox2DRoot)/build</RedBoltSolutionBuildRoot>
-    <RedBoltBuildConfigPath>$(RedBoltPhysicsBox2DRoot)/build/BuildConfig.props</RedBoltBuildConfigPath>
-  </PropertyGroup>
+  <Import Project="$(RedBoltRoot)/src/RedBolt/ExternalModule/Directory.Solution.props" />
 </Project>

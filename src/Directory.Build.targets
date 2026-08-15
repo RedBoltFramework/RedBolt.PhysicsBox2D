@@ -1,26 +1,5 @@
 <Project>
-  <Import Project="$(RedBoltRoot)/src/Directory.Build.targets" />
-
-  <ItemGroup Condition="('$(RedBoltPlatform)' == 'linux-x64' or '$(RedBoltPlatform)' == 'win-x64') and ('$(OutputType)' == 'Exe' or '$(IsTestProject)' == 'true')">
-    <AdditionalProbingPath Include="$(RedBoltRoot)/build/bin/$(Configuration)/$(RedBoltPlatform)/core" />
-    <AdditionalProbingPath Include="$(RedBoltRoot)/build/bin/$(Configuration)/$(RedBoltPlatform)/extern" />
-    <AdditionalProbingPath Include="$(RedBoltRoot)/build/bin/$(Configuration)/host/extern" />
-    <AdditionalProbingPath Include="$(RedBoltRoot)/build/bin/$(Configuration)/host/tools" />
-    <AdditionalProbingPath Include="$(RedBolt2DRoot)/build/bin/$(Configuration)/$(RedBoltPlatform)/core" />
-  </ItemGroup>
-
-  <Target Name="RedBoltPhysicsBox2DConfigureBaseRuntimeAssemblies"
-          BeforeTargets="RedBoltConfigureRuntimeAssemblies"
-          Condition="('$(RedBoltPlatform)' == 'linux-x64' or '$(RedBoltPlatform)' == 'win-x64') and ('$(OutputType)' == 'Exe' or '$(IsTestProject)' == 'true') and Exists('$(ProjectDepsFilePath)')">
-    <RedBoltUseParentRuntimeAssemblies
-        DependencyFile="$(ProjectDepsFilePath)"
-        MainProjectName="$(AssemblyName)"
-        NativeRuntimeDirectory="$(RedBoltRoot)/build/bin/$(Configuration)/$(RedBoltPlatform)/extern/runtimes/$(RedBoltPlatform)/native"
-        NativeModuleManifestDirectory="$(RedBoltRoot)/build/native/$(RedBoltPlatform)/generated/native-modules/$(Configuration)"
-        RuntimeIdentifier="$(RuntimeIdentifier)">
-      <Output TaskParameter="NativeAssets" ItemName="_RedBoltNativeAssets" />
-    </RedBoltUseParentRuntimeAssemblies>
-  </Target>
+  <Import Project="$(RedBoltRoot)/src/RedBolt/ExternalModule/Directory.Build.targets" />
 
   <Target Name="RedBoltPhysicsBox2DConfigureProjectReferences"
           BeforeTargets="AssignProjectConfiguration"

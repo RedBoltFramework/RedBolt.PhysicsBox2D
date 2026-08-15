@@ -1,8 +1,3 @@
 <Project>
-  <Import Project="$(RedBoltRoot)/Directory.Solution.targets" />
-  <PropertyGroup>
-    <RedBoltTraversalProject>$([System.IO.Path]::GetFullPath('$(RedBoltPhysicsBox2DRoot)/src/RedBolt/Build/RedBolt.PhysicsBox2D.Build.csproj'))</RedBoltTraversalProject>
-    <RedBoltSolutionBuildRoot>$(RedBoltPhysicsBox2DRoot)/build</RedBoltSolutionBuildRoot>
-    <RedBoltBuildConfigPath>$(RedBoltPhysicsBox2DRoot)/build/BuildConfig.props</RedBoltBuildConfigPath>
-  </PropertyGroup>
+  <Import Project="$(RedBoltRoot)/src/RedBolt/ExternalModule/Directory.Solution.targets" />
 </Project>
