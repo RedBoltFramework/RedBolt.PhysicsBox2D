@@ -5,28 +5,25 @@ For a copy, see <https://opensource.org/licenses/MIT> or the accompanying LICENS
 -->
 
 <Solution>
-  <Folder Name="/src/RedBolt/Build/">
-    <Project Path="src/RedBolt/Build/RedBolt.PhysicsBox2D.Build.csproj" />
-  </Folder>
   <Folder Name="/src/RedBolt/">
-    <Project Path="src/RedBolt/PhysicsBox2D/RedBolt.PhysicsBox2D.csproj"><Build Project="false" /></Project>
+    <Project Path="src/RedBolt/PhysicsBox2D/RedBolt.PhysicsBox2D.csproj" />
   </Folder>
   <Folder Name="/src/RedBolt/Generator/">
-    <Project Path="src/RedBolt/Generator/Dependencies/RedBolt.PhysicsBox2D.Generator.Dependencies.csproj"><Build Project="false" /></Project>
+    <Project Path="src/RedBolt/Generator/Dependencies/RedBolt.PhysicsBox2D.Generator.Dependencies.csproj" />
   </Folder>
   <Folder Name="/src/RedBolt/Native/">
-    <Project Path="src/RedBolt/Native/Box2D/RedBolt.Bindings.Box2D.csproj"><Build Project="false" /></Project>
-    <Project Path="src/RedBolt/Native/RedBolt.PhysicsBox2D.Native.csproj"><Build Project="false" /></Project>
-    <Project Path="src/RedBolt/Native/RedBolt.PhysicsBox2D.Native.Web.csproj"><Build Project="false" /></Project>
-    <Project Path="src/RedBolt/Native/RedBolt.PhysicsBox2D.Native.Android.csproj"><Build Project="false" /></Project>
+    <Project Path="src/RedBolt/Native/Box2D/RedBolt.Bindings.Box2D.csproj" />
+    <Project Path="src/RedBolt/Native/RedBolt.PhysicsBox2D.Native.csproj" />
+    <Project Path="src/RedBolt/Native/RedBolt.PhysicsBox2D.Native.Web.csproj" />
+    <Project Path="src/RedBolt/Native/RedBolt.PhysicsBox2D.Native.Android.csproj" />
   </Folder>
   <Folder Name="/src/RedBolt/Sample/">
-    <Project Path="src/RedBolt/Sample/Physics2D/RedBolt.Sample.Physics2D.csproj"><Build Project="false" /></Project>
-    <Project Path="src/RedBolt/Sample/Physics2DConstraints/RedBolt.Sample.Physics2DConstraints.csproj"><Build Project="false" /></Project>
-    <Project Path="src/RedBolt/Sample/Physics2DRope/RedBolt.Sample.Physics2DRope.csproj"><Build Project="false" /></Project>
-    <Project Path="src/RedBolt/Sample/Urho2DIsometricDemo/RedBolt.Sample.Urho2DIsometricDemo.csproj"><Build Project="false" /></Project>
-    <Project Path="src/RedBolt/Sample/Urho2DPlatformer/RedBolt.Sample.Urho2DPlatformer.csproj"><Build Project="false" /></Project>
-    <Project Path="src/RedBolt/Sample/Web/RedBolt.Sample.Web.csproj"><Build Project="false" /></Project>
-    <Project Path="src/RedBolt/Sample/Android/RedBolt.Sample.Android.csproj"><Build Project="false" /></Project>
+    <Project Path="src/RedBolt/Sample/Physics2D/RedBolt.Sample.Physics2D.csproj" />
+    <Project Path="src/RedBolt/Sample/Physics2DConstraints/RedBolt.Sample.Physics2DConstraints.csproj" />
+    <Project Path="src/RedBolt/Sample/Physics2DRope/RedBolt.Sample.Physics2DRope.csproj" />
+    <Project Path="src/RedBolt/Sample/Urho2DIsometricDemo/RedBolt.Sample.Urho2DIsometricDemo.csproj" />
+    <Project Path="src/RedBolt/Sample/Urho2DPlatformer/RedBolt.Sample.Urho2DPlatformer.csproj" />
+    <Project Path="src/RedBolt/Sample/Web/RedBolt.Sample.Web.csproj" />
+    <Project Path="src/RedBolt/Sample/Android/RedBolt.Sample.Android.csproj" />
   </Folder>
 </Solution>

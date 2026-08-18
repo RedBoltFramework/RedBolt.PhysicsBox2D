@@ -11,7 +11,6 @@ For a copy, see <https://opensource.org/licenses/MIT> or the accompanying LICENS
     <RedBolt2DRoot Condition="'$(RedBolt2DRoot)' == ''">$([System.IO.Path]::GetFullPath('$(RedBoltPhysicsBox2DRoot)/../RedBolt.2D'))</RedBolt2DRoot>
     <RedBoltExternalModuleRoot>$(RedBoltPhysicsBox2DRoot)</RedBoltExternalModuleRoot>
     <RedBoltExternalModuleName>RedBolt.PhysicsBox2D</RedBoltExternalModuleName>
-    <RedBoltExternalBuildProjectName>RedBolt.PhysicsBox2D.Build</RedBoltExternalBuildProjectName>
     <RedBoltExternalGeneratorProjectName>RedBolt.PhysicsBox2D.Generator.Dependencies</RedBoltExternalGeneratorProjectName>
     <RedBoltExternalGeneratorProjectPrefix>RedBolt.PhysicsBox2D.Generator.</RedBoltExternalGeneratorProjectPrefix>
     <RedBoltExternalNativeWebProjectName>RedBolt.PhysicsBox2D.Native.Web</RedBoltExternalNativeWebProjectName>
@@ -28,7 +27,6 @@ For a copy, see <https://opensource.org/licenses/MIT> or the accompanying LICENS
   <Import Project="$(RedBoltRoot)/src/RedBolt/Build/Directory.Build.props" />
   <PropertyGroup>
     <RedBoltExternalModuleEnabled>$(RedBoltPhysicsBox2DEnabled)</RedBoltExternalModuleEnabled>
-    <RedBoltExternalModuleBuildProperties>RedBolt2DEnabled=$(RedBolt2DEnabled);RedBoltPhysicsBox2DEnabled=$(RedBoltPhysicsBox2DEnabled)</RedBoltExternalModuleBuildProperties>
     <RedBoltExternalAdditionalProbingPaths>$(RedBolt2DRoot)/build/bin/$(Configuration)/$(RedBoltPlatform)/core</RedBoltExternalAdditionalProbingPaths>
   </PropertyGroup>
 </Project>

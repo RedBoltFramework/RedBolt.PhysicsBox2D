@@ -53,9 +53,7 @@ unset(CPM_VERSION CACHE)
 include("${REDBOLT_ROOT}/cmake/CPM.cmake")
 set(FETCHCONTENT_BASE_DIR "${CMAKE_BINARY_DIR}/deps")
 
-set(SHARPCPP_BUILD_E2E OFF CACHE BOOL "Build SharpCpp E2E" FORCE)
-set(SHARPCPP_BUILD_RBFX OFF CACHE BOOL "Build SharpCpp rbfx bindings" FORCE)
-add_subdirectory("${REDBOLT_SHARPCPP_ROOT}" "${CMAKE_BINARY_DIR}/deps/SharpCpp" EXCLUDE_FROM_ALL)
+include("${REDBOLT_ROOT}/cmake/RedBoltSharpCpp.cmake")
 
 set(BOX2D_COMPILE_WARNING_AS_ERROR OFF CACHE BOOL "Disable Box2D warnings as errors" FORCE)
 set(BOX2D_DISABLE_SIMD OFF CACHE BOOL "Use Box2D portable SIMD" FORCE)
@@ -89,7 +87,6 @@ elseif(CMAKE_BUILD_TYPE MATCHES "^(Release|Distribution|ReleaseASAN|ReleaseUBSAN
 endif()
 set(REDBOLT_BINDING_DEFINES ${_redbolt_2d_binding_defines})
 
-include("${REDBOLT_ROOT}/cmake/RedBoltSharpCpp.cmake")
 add_subdirectory(src/RedBolt/Generator/Dependencies)
 add_subdirectory(src/RedBolt/Native/Box2D)
 
