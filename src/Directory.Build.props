@@ -27,6 +27,6 @@ For a copy, see <https://opensource.org/licenses/MIT> or the accompanying LICENS
   <Import Project="$(RedBoltRoot)/src/RedBolt/Build/Directory.Build.props" />
   <PropertyGroup>
     <RedBoltExternalModuleEnabled>$(RedBoltPhysicsBox2DEnabled)</RedBoltExternalModuleEnabled>
-    <RedBoltExternalAdditionalProbingPaths>$(RedBolt2DRoot)/build/bin/$(Configuration)/$(RedBoltPlatform)/core</RedBoltExternalAdditionalProbingPaths>
+    <RedBoltExternalAdditionalProbingPaths>$(RedBoltCoreOutputDir)</RedBoltExternalAdditionalProbingPaths>
   </PropertyGroup>
 </Project>
