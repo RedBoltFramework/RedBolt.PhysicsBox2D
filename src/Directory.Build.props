@@ -5,6 +5,10 @@ For a copy, see <https://opensource.org/licenses/MIT> or the accompanying LICENS
 -->
 
 <Project>
+  <!--
+    Module project evaluation. Native module depending on RedBolt.2D (its desktop data root), with
+    web and android native projects.
+  -->
   <PropertyGroup>
     <RedBoltPhysicsBox2DRoot>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..'))</RedBoltPhysicsBox2DRoot>
     <RedBoltRoot Condition="'$(RedBoltRoot)' == ''">$([System.IO.Path]::GetFullPath('$(RedBoltPhysicsBox2DRoot)/../RedBolt'))</RedBoltRoot>
@@ -13,9 +17,6 @@ For a copy, see <https://opensource.org/licenses/MIT> or the accompanying LICENS
     <RedBoltExternalModuleName>RedBolt.PhysicsBox2D</RedBoltExternalModuleName>
     <RedBoltExternalGeneratorProjectName>RedBolt.PhysicsBox2D.Generator.Dependencies</RedBoltExternalGeneratorProjectName>
     <RedBoltExternalGeneratorProjectPrefix>RedBolt.PhysicsBox2D.Generator.</RedBoltExternalGeneratorProjectPrefix>
-    <RedBoltExternalNativeWebProjectName>RedBolt.PhysicsBox2D.Native.Web</RedBoltExternalNativeWebProjectName>
-    <RedBoltExternalNativeAndroidProjectName>RedBolt.PhysicsBox2D.Native.Android</RedBoltExternalNativeAndroidProjectName>
-    <RedBoltExternalModuleProjectNames>RedBolt.PhysicsBox2D;RedBolt.Bindings.Box2D</RedBoltExternalModuleProjectNames>
     <RedBoltExternalGeneratedBindingsDirectory>redbolt-physics-box2d-native</RedBoltExternalGeneratedBindingsDirectory>
     <RedBoltExternalBindingsSubdirectory>box2d</RedBoltExternalBindingsSubdirectory>
     <RedBoltExternalBindingsProjectName>RedBolt.Bindings.Box2D</RedBoltExternalBindingsProjectName>
@@ -24,9 +25,8 @@ For a copy, see <https://opensource.org/licenses/MIT> or the accompanying LICENS
     <RedBoltExternalEnabledNativeModules>BOX2D</RedBoltExternalEnabledNativeModules>
     <RedBoltExternalDesktopResourceRoot>$(RedBolt2DRoot)</RedBoltExternalDesktopResourceRoot>
   </PropertyGroup>
-  <Import Project="$(RedBoltRoot)/src/RedBolt/Build/Directory.Build.props" />
+  <Import Project="$(RedBoltRoot)/eng/RedBolt.ModuleBuild/Directory.Build.props" />
   <PropertyGroup>
-    <RedBoltExternalModuleEnabled>$(RedBoltPhysicsBox2DEnabled)</RedBoltExternalModuleEnabled>
     <RedBoltExternalAdditionalProbingPaths>$(RedBoltCoreOutputDir)</RedBoltExternalAdditionalProbingPaths>
   </PropertyGroup>
 </Project>

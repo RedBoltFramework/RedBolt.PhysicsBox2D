@@ -12,10 +12,9 @@ For a copy, see <https://opensource.org/licenses/MIT> or the accompanying LICENS
   <ItemGroup>
     <ProjectReference Include="$(RedBolt2DRoot)/src/RedBolt/2D/RedBolt.2D.csproj" />
     <ProjectReference Include="../../PhysicsBox2D/RedBolt.PhysicsBox2D.csproj" />
-    <ProjectReference Include="../../Native/RedBolt.PhysicsBox2D.Native.Web.csproj" ReferenceOutputAssembly="false" Private="false" PrivateAssets="all" />
     <Compile Include="../Physics2D/**/*.cs;../Physics2DConstraints/**/*.cs;../Physics2DRope/**/*.cs;../Urho2DIsometricDemo/**/*.cs;../Urho2DPlatformer/**/*.cs;../Utilities2D/**/*.cs" Link="Samples/%(RecursiveDir)%(Filename)%(Extension)" />
     <RedBoltWebCoreDataResource Include="$(RedBolt2DRoot)/bin/CoreData/**/*" />
     <RedBoltWebDataResource Include="$(RedBolt2DRoot)/bin/Data/**/*" />
   </ItemGroup>
-  <Import Project="$(RedBoltRoot)/src/RedBolt/Build/WebSample.targets" />
+  <Import Project="$(RedBoltRoot)/eng/RedBolt.ModuleBuild/WebSample.targets" />
 </Project>

@@ -12,7 +12,7 @@ RedBolt.Tests/
 Build the Linux x64 modules and native Box2D wrapper:
 
 ```sh
-dotnet build src/RedBolt/Native/RedBolt.PhysicsBox2D.Native.csproj --configuration Debug
+dotnet build src/RedBolt/Native/Box2D/RedBolt.Bindings.Box2D.csproj --configuration Debug
 dotnet build src/RedBolt/PhysicsBox2D/RedBolt.PhysicsBox2D.csproj --configuration Debug
 ```
 

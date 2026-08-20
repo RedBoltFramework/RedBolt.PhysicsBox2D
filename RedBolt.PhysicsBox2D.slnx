@@ -13,9 +13,6 @@ For a copy, see <https://opensource.org/licenses/MIT> or the accompanying LICENS
   </Folder>
   <Folder Name="/src/RedBolt/Native/">
     <Project Path="src/RedBolt/Native/Box2D/RedBolt.Bindings.Box2D.csproj" />
-    <Project Path="src/RedBolt/Native/RedBolt.PhysicsBox2D.Native.csproj" />
-    <Project Path="src/RedBolt/Native/RedBolt.PhysicsBox2D.Native.Web.csproj" />
-    <Project Path="src/RedBolt/Native/RedBolt.PhysicsBox2D.Native.Android.csproj" />
   </Folder>
   <Folder Name="/src/RedBolt/Sample/">
     <Project Path="src/RedBolt/Sample/Physics2D/RedBolt.Sample.Physics2D.csproj" />
