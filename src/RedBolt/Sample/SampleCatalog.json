@@ -13,10 +13,10 @@
     "Utilities2D/**/*.cs"
   ],
   "coreData": [
-    "../RedBolt.2D/bin/CoreData/**/*"
+    "../RedBolt.2D/bin/CoreData.2D/**/*"
   ],
   "data": [
-    "../RedBolt.2D/bin/Data/**/*"
+    "../RedBolt.2D/bin/Data.2D/**/*"
   ],
   "resourcePackageName": "RedBolt.2D",
   "webPInvokeModules": [

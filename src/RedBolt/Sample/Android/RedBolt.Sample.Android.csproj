@@ -24,8 +24,8 @@ For a copy, see <https://opensource.org/licenses/MIT> or the accompanying LICENS
     <Compile Include="../Urho2DIsometricDemo/**/*.cs" Link="Samples/RedBoltPhysicsBox2D/Urho2DIsometricDemo/%(RecursiveDir)%(Filename)%(Extension)" />
     <Compile Include="../Urho2DPlatformer/**/*.cs" Link="Samples/RedBoltPhysicsBox2D/Urho2DPlatformer/%(RecursiveDir)%(Filename)%(Extension)" />
     <Compile Include="../Utilities2D/**/*.cs" Link="Samples/RedBoltPhysicsBox2D/%(RecursiveDir)%(Filename)%(Extension)" />
-    <AndroidAsset Include="../../../../../RedBolt.2D/bin/CoreData/**/*" Link="CoreData/%(RecursiveDir)%(Filename)%(Extension)" />
-    <AndroidAsset Include="../../../../../RedBolt.2D/bin/Data/**/*" Link="Data/%(RecursiveDir)%(Filename)%(Extension)" />
+    <AndroidAsset Include="../../../../../RedBolt.2D/bin/CoreData.2D/**/*" Link="CoreData/%(RecursiveDir)%(Filename)%(Extension)" />
+    <AndroidAsset Include="../../../../../RedBolt.2D/bin/Data.2D/**/*" Link="Data/%(RecursiveDir)%(Filename)%(Extension)" />
     <!-- </redbolt-generated name="android-project-items"> -->
   </ItemGroup>
   <!-- <redbolt-generated name="android-project-import"> -->

@@ -24,6 +24,7 @@ For a copy, see <https://opensource.org/licenses/MIT> or the accompanying LICENS
     <RedBoltExternalNativeTargetPrefix>redbolt-physics-box2d</RedBoltExternalNativeTargetPrefix>
     <RedBoltExternalEnabledNativeModules>BOX2D</RedBoltExternalEnabledNativeModules>
     <RedBoltExternalDesktopResourceRoot>$(RedBolt2DRoot)</RedBoltExternalDesktopResourceRoot>
+    <RedBoltExternalDesktopResourceName>2D</RedBoltExternalDesktopResourceName>
   </PropertyGroup>
   <Import Project="$(RedBoltRoot)/eng/RedBolt.ModuleBuild/Directory.Build.props" />
   <PropertyGroup>
