@@ -1,0 +1,32 @@
+{
+  "name": "RedBolt.PhysicsBox2D",
+  "applicationId": "org.redbolt.physicsbox2d.samples",
+  "web": true,
+  "android": true,
+  "native": true,
+  "webNative": true,
+  "projectReferences": [
+    "../RedBolt.2D/src/RedBolt/2D/RedBolt.2D.csproj",
+    "src/RedBolt/PhysicsBox2D/RedBolt.PhysicsBox2D.csproj"
+  ],
+  "additionalSources": [
+    "Utilities2D/**/*.cs"
+  ],
+  "coreData": [
+    "../RedBolt.2D/bin/CoreData/**/*"
+  ],
+  "data": [
+    "../RedBolt.2D/bin/Data/**/*"
+  ],
+  "resourcePackageName": "RedBolt.2D",
+  "webPInvokeModules": [
+    "RedBolt.Native.Box2D"
+  ],
+  "samples": [
+    { "id": "physics2d", "name": "Physics2D", "applicationType": "RedBolt.Sample.Physics2D.Physics2D", "source": "Physics2D" },
+    { "id": "physics2d-rope", "name": "Physics2D Rope", "applicationType": "RedBolt.Sample.Physics2DRope.Physics2DRope", "source": "Physics2DRope" },
+    { "id": "physics2d-constraints", "name": "Physics2D Constraints", "applicationType": "RedBolt.Sample.Physics2DConstraints.Physics2DConstraints", "source": "Physics2DConstraints" },
+    { "id": "urho2d-isometric-demo", "name": "Urho2D Isometric Demo", "applicationType": "RedBolt.Sample.Urho2DIsometricDemo.Urho2DIsometricDemo", "source": "Urho2DIsometricDemo" },
+    { "id": "urho2d-platformer", "name": "Urho2D Platformer", "applicationType": "RedBolt.Sample.Urho2DPlatformer.Urho2DPlatformer", "source": "Urho2DPlatformer" }
+  ]
+}
