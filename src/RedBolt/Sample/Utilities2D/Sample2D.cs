@@ -29,7 +29,7 @@ public sealed class Sample2D
     {
         if (tileMapLayer is null)
             return;
-        tileMapNode.CreateComponent<RigidBody2D>().BodyType = BodyType2D.Static;
+        GetOrCreateStaticBody(tileMapNode);
         for (uint i = 0; i < tileMapLayer.NumObjects; ++i)
         {
             if (tileMapLayer.GetObject(i) is not { } value)
@@ -80,9 +80,8 @@ public sealed class Sample2D
             var node = _scene.CreateChild("Coin");
             node.SetScale(0.5f);
             node.SetPosition2D(value.Position + value.Size * 0.5f + new Vector2f(0.0f, 0.16f));
-            var sprite = node.CreateComponent<AnimatedSprite2D>();
-            sprite.AnimationSet = _resources.Get<AnimationSet2D>("Urho2D/GoldIcon.scml");
-            sprite.SetAnimation("idle");
+            var sprite = node.CreateComponent<StaticSprite2D>();
+            sprite.Sprite = _resources.Get<Sprite2D>("Urho2D/Tilesets/Platformer/Sprites/shieldGold.png");
             sprite.Layer = 4;
             node.CreateComponent<RigidBody2D>().BodyType = BodyType2D.Static;
             var shape = node.CreateComponent<CollisionCircle2D>();
@@ -93,15 +92,32 @@ public sealed class Sample2D
 
     private static CollisionShape2D CreateRectangleShape(Node node, TileMapObject2D value, TileMapInfo2D info)
     {
+        if (info.Orientation == Orientation2D.Isometric)
+            return CreateIsometricRectangleShape(node, value, info);
+
         var shape = node.CreateComponent<CollisionBox2D>();
         shape.Size = value.Size;
-        if (info.Orientation == Orientation2D.Orthogonal)
-            shape.Center = value.Position + value.Size * 0.5f;
-        else
-        {
-            shape.Center = value.Position + new Vector2f(info.TileWidth * 0.5f, 0.0f);
-            shape.Angle = 45.0f;
-        }
+        shape.Center = value.Position + value.Size * 0.5f;
+        return shape;
+    }
+
+    private static CollisionShape2D CreateIsometricRectangleShape(Node node, TileMapObject2D value, TileMapInfo2D info)
+    {
+        // An isometric TMX rectangle has two diagonal world-space axes. Build the
+        // polygon from those axes so wide walls keep their full length and position.
+        var horizontal = new Vector2f(
+            value.Size.X * info.TileWidth / (2.0f * info.TileHeight),
+            -value.Size.X * 0.5f);
+        var vertical = new Vector2f(
+            -value.Size.Y * info.TileWidth / (2.0f * info.TileHeight),
+            -value.Size.Y * 0.5f);
+        var shape = node.CreateComponent<CollisionPolygon2D>();
+        shape.SetVertices([
+            value.Position,
+            value.Position + horizontal,
+            value.Position + horizontal - vertical,
+            value.Position - vertical,
+        ]);
         return shape;
     }
 
@@ -133,5 +149,12 @@ public sealed class Sample2D
             points[i] = value.GetPoint(i);
         shape.SetVertices(points);
         return shape;
+    }
+
+    private static RigidBody2D GetOrCreateStaticBody(Node node)
+    {
+        var body = node.GetComponent<RigidBody2D>() ?? node.CreateComponent<RigidBody2D>();
+        body.BodyType = BodyType2D.Static;
+        return body;
     }
 }

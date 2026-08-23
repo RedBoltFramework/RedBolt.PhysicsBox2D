@@ -32,6 +32,11 @@ public sealed class Urho2DIsometricDemo : Application
     private Node? _cameraNode;
     private Node? _character;
     private RigidBody2D? _characterBody;
+    private StaticSprite2D? _characterSprite;
+    private Sprite2D[][] _idleFrames = [];
+    private Sprite2D[][] _runFrames = [];
+    private int _characterDirection = 3;
+    private float _characterAnimationTime;
     private PhysicsWorld2D? _world;
     private float _verticalSpeedScale = 0.5f;
     private bool _drawDebug;
@@ -48,7 +53,7 @@ public sealed class Urho2DIsometricDemo : Application
         parameters.WindowHeight = 720;
         parameters.WindowWidth = 1280;
 #endif
-        parameters.WindowTitle = "RedBolt Urho2D Isometric Demo";
+        parameters.WindowTitle = "RedBolt Urho2D Isometric Demo - F2: Physics Collisions";
     }
 
     protected override void Start()
@@ -58,34 +63,36 @@ public sealed class Urho2DIsometricDemo : Application
         var scene = new Scene();
         scene.CreateComponent<Octree>();
         scene.CreateComponent<DebugRenderer>();
+        var zone = scene.CreateChild("Backdrop").CreateComponent<Zone>();
+        zone.SetBoundingBox(new BoundingBox(-1000.0f, 1000.0f));
+        zone.SetFogColor(new Color(0.72f, 0.58f, 0.43f));
         _world = scene.CreateComponent<PhysicsWorld2D>();
         _world.Gravity = Vector2f.Zero;
         _cameraNode = scene.CreateChild("Camera");
         var camera = _cameraNode.CreateComponent<Camera>();
         camera.SetOrthographic(true);
         camera.OrthoSize = Graphics.Height * Sprite2D.PixelSize;
-        camera.SetZoom(2.0f * MathF.Min(Graphics.Width / 1280.0f, Graphics.Height / 800.0f));
+        camera.SetZoom(0.55f * MathF.Min(Graphics.Width / 1280.0f, Graphics.Height / 800.0f));
 
-        if (Resources.Get<TmxFile2D>("Urho2D/Tilesets/atrium.tmx") is { } tmx)
+        if (Resources.Get<TmxFile2D>("Urho2D/Tilesets/IsometricDemo/dungeon.tmx") is { } tmx)
         {
             var tileMapNode = scene.CreateChild("TileMap");
             var tileMap = tileMapNode.CreateComponent<TileMap2D>();
             tileMap.TmxFile = tmx;
             var info = tileMap.Info;
             var utilities = new Sample2D(scene, Resources);
-            _character = utilities.CreateCharacter(info, 0.0f, new Vector3f(-5.0f, 11.0f, 0.0f), 0.15f);
+            _idleFrames = LoadCharacterFrames("Idle", 1);
+            _runFrames = LoadCharacterFrames("Run", 10);
+            var start = info.TileIndexToPosition(10, 10);
+            _character = CreateMaleCharacter(scene, new Vector3f(start.X, start.Y, 0.0f));
             _characterBody = _character.GetComponent<RigidBody2D>();
             _verticalSpeedScale = info.TileWidth != 0.0f ? info.TileHeight / info.TileWidth : 0.5f;
-            if (tileMap.NumLayers > 0)
-                utilities.CreateCollisionShapesFromTmxObjects(tileMapNode, tileMap.GetLayer(tileMap.NumLayers - 1), info);
-            if (tileMap.NumLayers > 2)
-                utilities.PopulateCoins(tileMap.GetLayer(tileMap.NumLayers - 3));
+            utilities.CreateCollisionShapesFromTmxObjects(tileMapNode, tileMap.GetLayer("Physics"), info);
         }
 
         Renderer.SetViewport(0, new Viewport(scene, camera));
         Input.SetMouseMode(MouseMode.Free);
         Input.SetMouseVisible(true);
-        SubscribeToEvent<PhysicsEvents2D.PhysicsBeginContact2DEvent>(_world, HandleBeginContact);
         SubscribeToEvent<CoreEvents.PostRenderUpdateEvent>((ref CoreEvents.PostRenderUpdateEvent _) =>
         {
             if (_drawDebug) _world.DrawDebugGeometry();
@@ -95,7 +102,7 @@ public sealed class Urho2DIsometricDemo : Application
     protected override void Update(float timeStep)
     {
         if (Input.ExitRequested || Input.GetKeyPress(Key.Escape)) { Exit(); return; }
-        if (Input.GetKeyPress(Key.Z)) _drawDebug = !_drawDebug;
+        if (Input.GetKeyPress(Key.F2) || Input.GetKeyPress(Key.Z)) _drawDebug = !_drawDebug;
         if (_characterBody is null || _character is null || _cameraNode is null) return;
         const float speed = 3.0f;
         var velocity = Vector2f.Zero;
@@ -104,10 +111,17 @@ public sealed class Urho2DIsometricDemo : Application
         if (Input.GetKeyDown(Key.A)) velocity.X -= speed;
         if (Input.GetKeyDown(Key.D)) velocity.X += speed;
         _characterBody.LinearVelocity = velocity;
-        if (_character.GetComponent<AnimatedSprite2D>() is { } sprite)
+        if (_characterSprite is not null)
         {
-            if (velocity.X != 0.0f) sprite.FlipX = velocity.X > 0.0f;
-            sprite.SetAnimation(velocity == Vector2f.Zero ? "idle" : "run");
+            var moving = velocity != Vector2f.Zero;
+            if (moving)
+                _characterDirection = GetDirectionIndex(velocity);
+            var frames = moving ? _runFrames[_characterDirection] : _idleFrames[_characterDirection];
+            if (moving)
+                _characterAnimationTime += timeStep;
+            var frame = moving ? (int)(_characterAnimationTime * 12.0f) % frames.Length : 0;
+            _characterSprite.Sprite = frames[frame];
+            _characterSprite.OrderInLayer = -(int)(_character.GetWorldPosition().Y * 100.0f) + 15;
         }
         _cameraNode.SetPosition(_character.GetWorldPosition() + new Vector3f(0.0f, 0.0f, -10.0f));
         var camera = _cameraNode.GetComponent<Camera>()!;
@@ -115,11 +129,48 @@ public sealed class Urho2DIsometricDemo : Application
         if (Input.GetKeyDown(Key.PageDown)) camera.SetZoom(camera.Zoom * 0.99f);
     }
 
-    private void HandleBeginContact(ref PhysicsEvents2D.PhysicsBeginContact2DEvent value)
+    private Sprite2D[][] LoadCharacterFrames(string animation, int count)
     {
-        var other = ReferenceEquals(value.NodeA, _character) ? value.NodeB
-            : ReferenceEquals(value.NodeB, _character) ? value.NodeA : null;
-        if (other?.Name == "Coin")
-            other.Remove();
+        var directions = new Sprite2D[8][];
+        for (var direction = 0; direction < directions.Length; ++direction)
+        {
+            var frames = new Sprite2D[count];
+            for (var index = 0; index < count; ++index)
+            {
+                var path = $"Urho2D/Characters/Male/Male_{direction}_{animation}{index}.png";
+                frames[index] = Resources.Get<Sprite2D>(path)
+                    ?? throw new InvalidOperationException($"Could not load isometric character frame '{path}'.");
+                frames[index].TextureEdgeOffset = 1.0f;
+            }
+            directions[direction] = frames;
+        }
+        return directions;
+    }
+
+    // Kenney indices follow the isometric compass: 0=N, 2=E, 4=S, and 6=W.
+    private static int GetDirectionIndex(Vector2f velocity) => velocity.Y switch
+    {
+        > 0.0f => velocity.X < 0.0f ? 6 : velocity.X > 0.0f ? 0 : 7,
+        < 0.0f => velocity.X < 0.0f ? 4 : velocity.X > 0.0f ? 2 : 3,
+        _ => velocity.X < 0.0f ? 5 : 1,
+    };
+
+    private Node CreateMaleCharacter(Scene scene, Vector3f position)
+    {
+        var node = scene.CreateChild("Characters").CreateChild("Male");
+        node.SetPosition(position);
+        var sprite = node.CreateComponent<StaticSprite2D>();
+        sprite.Sprite = _idleFrames[_characterDirection][0];
+        sprite.UseHotSpot = true;
+        sprite.HotSpot = new Vector2f(0.5f, 0.1f);
+        sprite.Layer = 0;
+        _characterSprite = sprite;
+        node.CreateComponent<RigidBody2D>().BodyType = BodyType2D.Dynamic;
+        node.GetComponent<RigidBody2D>()!.AllowSleep = false;
+        var shape = node.CreateComponent<CollisionCircle2D>();
+        shape.Radius = 0.30f;
+        shape.Friction = 0.0f;
+        shape.Restitution = 0.1f;
+        return node;
     }
 }

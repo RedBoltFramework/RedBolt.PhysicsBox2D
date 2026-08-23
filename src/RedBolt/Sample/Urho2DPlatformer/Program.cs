@@ -33,8 +33,12 @@ public sealed class Urho2DPlatformer : Application
     private Node? _character;
     private RigidBody2D? _characterBody;
     private PhysicsWorld2D? _world;
+    private readonly Vector3f _initialSpawnPosition = new(1.5f, 3.4f, 0.0f);
+    private Vector3f _spawnPosition = new(1.5f, 3.4f, 0.0f);
+    private Vector2f _levelSize;
     private int _groundContacts;
     private bool _drawDebug;
+    private bool _levelComplete;
 
     protected override void Setup(EngineParameters parameters)
     {
@@ -58,26 +62,33 @@ public sealed class Urho2DPlatformer : Application
         var scene = new Scene();
         scene.CreateComponent<Octree>();
         scene.CreateComponent<DebugRenderer>();
+        var zone = scene.CreateChild("Backdrop").CreateComponent<Zone>();
+        zone.SetBoundingBox(new BoundingBox(-1000.0f, 1000.0f));
+        zone.SetFogColor(new Color(0.24f, 0.28f, 0.29f));
         _world = scene.CreateComponent<PhysicsWorld2D>();
         _cameraNode = scene.CreateChild("Camera");
         var camera = _cameraNode.CreateComponent<Camera>();
         camera.SetOrthographic(true);
         camera.OrthoSize = Graphics.Height * Sprite2D.PixelSize;
-        camera.SetZoom(2.0f * MathF.Min(Graphics.Width / 1280.0f, Graphics.Height / 800.0f));
+        camera.SetZoom(1.05f * MathF.Min(Graphics.Width / 1280.0f, Graphics.Height / 800.0f));
 
-        if (Resources.Get<TmxFile2D>("Urho2D/Tilesets/Ortho.tmx") is { } tmx)
+        if (Resources.Get<TmxFile2D>("Urho2D/Tilesets/Platformer/platformer.tmx") is { } tmx)
         {
             var tileMapNode = scene.CreateChild("TileMap");
             var tileMap = tileMapNode.CreateComponent<TileMap2D>();
             tileMap.TmxFile = tmx;
+            _levelSize = new Vector2f(
+                tileMap.Info.Width * tileMap.Info.TileWidth,
+                tileMap.Info.Height * tileMap.Info.TileHeight);
             var utilities = new Sample2D(scene, Resources);
-            _character = utilities.CreateCharacter(tileMap.Info, 0.8f, new Vector3f(1.0f, 8.0f, 0.0f), 0.2f);
+            _character = utilities.CreateCharacter(tileMap.Info, 0.0f, _spawnPosition, 0.30f);
             _characterBody = _character.GetComponent<RigidBody2D>();
             _characterBody!.FixedRotation = true;
-            if (tileMap.NumLayers > 0)
-                utilities.CreateCollisionShapesFromTmxObjects(tileMapNode, tileMap.GetLayer(tileMap.NumLayers - 1), tileMap.Info);
-            if (tileMap.NumLayers > 2)
-                utilities.PopulateCoins(tileMap.GetLayer(tileMap.NumLayers - 3));
+            utilities.CreateCollisionShapesFromTmxObjects(tileMapNode, tileMap.GetLayer("Physics"), tileMap.Info);
+            utilities.PopulateCoins(tileMap.GetLayer("Coins"));
+            CreateTriggerNodes(scene, tileMap.GetLayer("Hazards"), "Hazard");
+            CreateTriggerNodes(scene, tileMap.GetLayer("Checkpoints"), "Checkpoint");
+            CreateTriggerNodes(scene, tileMap.GetLayer("Goal"), "Goal");
         }
 
         Renderer.SetViewport(0, new Viewport(scene, camera));
@@ -96,21 +107,38 @@ public sealed class Urho2DPlatformer : Application
         if (Input.ExitRequested || Input.GetKeyPress(Key.Escape)) { Exit(); return; }
         if (Input.GetKeyPress(Key.Z)) _drawDebug = !_drawDebug;
         if (_characterBody is null || _character is null || _cameraNode is null) return;
+        if (Input.GetKeyPress(Key.R))
+        {
+            _spawnPosition = _initialSpawnPosition;
+            _levelComplete = false;
+            Respawn();
+        }
+        if (_character.GetWorldPosition().Y < -1.0f) Respawn();
         var velocity = _characterBody.LinearVelocity;
         velocity.X = 0.0f;
-        if (Input.GetKeyDown(Key.A)) velocity.X -= 4.0f;
-        if (Input.GetKeyDown(Key.D)) velocity.X += 4.0f;
-        if (Input.GetKeyPress(Key.Space) && _groundContacts > 0) velocity.Y = 7.0f;
+        if (!_levelComplete)
+        {
+            if (Input.GetKeyDown(Key.A)) velocity.X -= 4.0f;
+            if (Input.GetKeyDown(Key.D)) velocity.X += 4.0f;
+            if (Input.GetKeyPress(Key.Space) && _groundContacts > 0) velocity.Y = 7.0f;
+        }
+        else
+            velocity = Vector2f.Zero;
         _characterBody.LinearVelocity = velocity;
         if (_character.GetComponent<AnimatedSprite2D>() is { } sprite)
         {
             if (velocity.X != 0.0f) sprite.FlipX = velocity.X > 0.0f;
-            sprite.SetAnimation(_groundContacts == 0 ? "jump" : velocity.X == 0.0f ? "idle" : "run");
+            sprite.SetAnimation(_groundContacts == 0 ? "idle" : velocity.X == 0.0f ? "idle" : "run");
         }
-        _cameraNode.SetPosition(_character.GetWorldPosition() + new Vector3f(0.0f, 1.5f, -10.0f));
         var camera = _cameraNode.GetComponent<Camera>()!;
         if (Input.GetKeyDown(Key.PageUp)) camera.SetZoom(camera.Zoom * 1.01f);
         if (Input.GetKeyDown(Key.PageDown)) camera.SetZoom(camera.Zoom * 0.99f);
+        var cameraPosition = _character.GetWorldPosition() + new Vector3f(0.0f, 1.5f, -10.0f);
+        var halfHeight = camera.OrthoSize / (2.0f * camera.Zoom);
+        var halfWidth = halfHeight * Graphics.Width / Graphics.Height;
+        cameraPosition.X = Math.Clamp(cameraPosition.X, halfWidth, _levelSize.X - halfWidth);
+        cameraPosition.Y = Math.Clamp(cameraPosition.Y, halfHeight, _levelSize.Y - halfHeight);
+        _cameraNode.SetPosition(cameraPosition);
     }
 
     private void HandleBeginContact(ref PhysicsEvents2D.PhysicsBeginContact2DEvent value)
@@ -119,6 +147,18 @@ public sealed class Urho2DPlatformer : Application
             : ReferenceEquals(value.NodeB, _character) ? value.NodeA : null;
         if (other is null) return;
         if (other.Name == "Coin") other.Remove();
+        else if (other.Name == "Hazard") Respawn();
+        else if (other.Name == "Checkpoint")
+        {
+            var position = other.GetWorldPosition();
+            _spawnPosition = new Vector3f(position.X, position.Y + 0.8f, 0.0f);
+            other.Remove();
+        }
+        else if (other.Name == "Goal")
+        {
+            _levelComplete = true;
+            Console.WriteLine("Relay Foundry 7 evacuated. Press R to restart.");
+        }
         else if (!value.ShapeA.Trigger && !value.ShapeB.Trigger) ++_groundContacts;
     }
 
@@ -127,5 +167,31 @@ public sealed class Urho2DPlatformer : Application
         if ((ReferenceEquals(value.NodeA, _character) || ReferenceEquals(value.NodeB, _character)) &&
             !value.ShapeA.Trigger && !value.ShapeB.Trigger)
             _groundContacts = Math.Max(0, _groundContacts - 1);
+    }
+
+    private static void CreateTriggerNodes(Scene scene, TileMapLayer2D? layer, string nodeName)
+    {
+        if (layer is null)
+            return;
+        for (uint index = 0; index < layer.NumObjects; ++index)
+        {
+            if (layer.GetObject(index) is not { ObjectType: TileMapObjectType2D.Rectangle } value)
+                continue;
+            var node = scene.CreateChild(nodeName);
+            node.SetPosition2D(value.Position + value.Size * 0.5f);
+            node.CreateComponent<RigidBody2D>().BodyType = BodyType2D.Static;
+            var shape = node.CreateComponent<CollisionBox2D>();
+            shape.Size = value.Size;
+            shape.Trigger = true;
+        }
+    }
+
+    private void Respawn()
+    {
+        if (_character is null || _characterBody is null)
+            return;
+        _character.SetPosition(_spawnPosition);
+        _characterBody.LinearVelocity = Vector2f.Zero;
+        _groundContacts = 0;
     }
 }

@@ -87,14 +87,14 @@ public sealed class Physics2DConstraints : Application
         body.BodyType = type;
         if (circle)
         {
-            node.CreateComponent<StaticSprite2D>().Sprite = Resources.Get<Sprite2D>("Urho2D/Ball.png");
+            node.CreateComponent<StaticSprite2D>().Sprite = Resources.Get<Sprite2D>("Urho2D/Tilesets/Platformer/Sprites/shieldGold.png");
             var shape = node.CreateComponent<CollisionCircle2D>();
             shape.Radius = 0.32f;
             shape.Density = 1.0f;
         }
         else
         {
-            node.CreateComponent<StaticSprite2D>().Sprite = Resources.Get<Sprite2D>("Urho2D/Box.png");
+            node.CreateComponent<StaticSprite2D>().Sprite = Resources.Get<Sprite2D>("Urho2D/Tilesets/Platformer/Sprites/metal.png");
             var shape = node.CreateComponent<CollisionBox2D>();
             shape.Size = new Vector2f(0.64f, 0.64f);
             shape.Density = 1.0f;

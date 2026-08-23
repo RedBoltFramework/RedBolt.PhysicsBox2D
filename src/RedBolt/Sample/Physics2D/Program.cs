@@ -59,8 +59,8 @@ public sealed class Physics2D : Application
         camera.OrthoSize = Graphics.Height * Sprite2D.PixelSize;
         camera.SetZoom(1.2f * MathF.Min(Graphics.Width / 1280.0f, Graphics.Height / 800.0f));
 
-        var boxSprite = Resources.Get<Sprite2D>("Urho2D/Box.png");
-        var ballSprite = Resources.Get<Sprite2D>("Urho2D/Ball.png");
+        var boxSprite = Resources.Get<Sprite2D>("Urho2D/Tilesets/Platformer/Sprites/metal.png");
+        var ballSprite = Resources.Get<Sprite2D>("Urho2D/Tilesets/Platformer/Sprites/shieldGold.png");
         var ground = scene.CreateChild("Ground");
         ground.SetPosition2D(0.0f, -3.0f);
         ground.SetScale(new Vector3f(200.0f, 1.0f, 1.0f));
