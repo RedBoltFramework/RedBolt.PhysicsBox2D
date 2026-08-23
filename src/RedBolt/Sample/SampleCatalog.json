@@ -15,8 +15,8 @@
   "coreData": [
     "../RedBolt.2D/bin/CoreData.2D/**/*"
   ],
-  "data": [
-    "../RedBolt.2D/bin/Data.2D/**/*"
+  "sampleData": [
+    "../RedBolt.2D/bin/SampleData.2D/**/*"
   ],
   "resourcePackageName": "RedBolt.2D",
   "webPInvokeModules": [

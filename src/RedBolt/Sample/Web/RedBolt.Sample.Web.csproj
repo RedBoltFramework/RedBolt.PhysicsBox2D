@@ -25,7 +25,7 @@ For a copy, see <https://opensource.org/licenses/MIT> or the accompanying LICENS
     <Compile Include="../Urho2DPlatformer/**/*.cs" Link="Samples/RedBoltPhysicsBox2D/Urho2DPlatformer/%(RecursiveDir)%(Filename)%(Extension)" />
     <Compile Include="../Utilities2D/**/*.cs" Link="Samples/RedBoltPhysicsBox2D/%(RecursiveDir)%(Filename)%(Extension)" />
     <RedBoltWebResourcePackage Include="RedBolt.2D.CoreData" SourceDirectory="../../../../../RedBolt.2D/bin/CoreData.2D" />
-    <RedBoltWebResourcePackage Include="RedBolt.2D.Data" SourceDirectory="../../../../../RedBolt.2D/bin/Data.2D" />
+    <RedBoltWebResourcePackage Include="RedBolt.2D.SampleData" SourceDirectory="../../../../../RedBolt.2D/bin/SampleData.2D" />
     <!-- </redbolt-generated name="web-project-items"> -->
   </ItemGroup>
   <!-- <redbolt-generated name="web-project-import"> -->
