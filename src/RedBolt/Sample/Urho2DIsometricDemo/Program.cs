@@ -121,7 +121,7 @@ public sealed class Urho2DIsometricDemo : Application
                 _characterAnimationTime += timeStep;
             var frame = moving ? (int)(_characterAnimationTime * 12.0f) % frames.Length : 0;
             _characterSprite.Sprite = frames[frame];
-            _characterSprite.OrderInLayer = -(int)(_character.GetWorldPosition().Y * 100.0f) + 15;
+            _characterSprite.Layer = -(int)(_character.GetWorldPosition().Y * 100.0f);
         }
         _cameraNode.SetPosition(_character.GetWorldPosition() + new Vector3f(0.0f, 0.0f, -10.0f));
         var camera = _cameraNode.GetComponent<Camera>()!;
@@ -163,7 +163,8 @@ public sealed class Urho2DIsometricDemo : Application
         sprite.Sprite = _idleFrames[_characterDirection][0];
         sprite.UseHotSpot = true;
         sprite.HotSpot = new Vector2f(0.5f, 0.1f);
-        sprite.Layer = 0;
+        sprite.Layer = -(int)(position.Y * 100.0f);
+        sprite.OrderInLayer = 15;
         _characterSprite = sprite;
         node.CreateComponent<RigidBody2D>().BodyType = BodyType2D.Dynamic;
         node.GetComponent<RigidBody2D>()!.AllowSleep = false;
