@@ -5,6 +5,10 @@
 namespace RedBolt.Sample.Physics2D;
 
 using System;
+using RedBolt;
+using RedBolt.Bindings.DearImGui;
+using RedBolt.Core;
+using RedBolt.DearImGui;
 using RedBolt.Engine;
 using RedBolt.Graphics;
 using RedBolt.Graphics2D;
@@ -14,6 +18,7 @@ using RedBolt.PhysicsBox2D;
 using RedBolt.Resource;
 using RedBolt.Scene;
 using RedBolt.Scene2D;
+using Widgets = RedBolt.SystemUI.Widgets;
 
 internal static class Physics2DProgram
 {
@@ -27,7 +32,12 @@ internal static class Physics2DProgram
 /// <summary>Demonstrates sprites driven by Box2D rigid bodies.</summary>
 public sealed class Physics2D : Application
 {
+    private Scene? _scene;
     private Node? _cameraNode;
+    private PhysicsWorld2D? _physicsWorld;
+    private ConstraintMouse2D? _mouseJoint;
+    private Texture2D[]? _controlPrompts;
+    private static readonly Vector2f PromptIconSize = new(24.0f, 24.0f);
 
     protected override void Setup(EngineParameters parameters)
     {
@@ -48,11 +58,11 @@ public sealed class Physics2D : Application
     {
         Scene2D.RegisterUrho2DLibrary(Context);
         RedBolt.PhysicsBox2D.Physics2D.RegisterPhysics2DLibrary(Context);
-        var scene = new Scene();
-        scene.CreateComponent<Octree>();
-        scene.CreateComponent<DebugRenderer>();
-        scene.CreateComponent<PhysicsWorld2D>();
-        _cameraNode = scene.CreateChild("Camera");
+        _scene = new Scene();
+        _scene.CreateComponent<Octree>();
+        _scene.CreateComponent<DebugRenderer>();
+        _physicsWorld = _scene.CreateComponent<PhysicsWorld2D>();
+        _cameraNode = _scene.CreateChild("Camera");
         _cameraNode.SetPosition(new Vector3f(0.0f, 0.0f, -10.0f));
         var camera = _cameraNode.CreateComponent<Camera>();
         camera.SetOrthographic(true);
@@ -61,38 +71,50 @@ public sealed class Physics2D : Application
 
         var boxSprite = Resources.Get<Sprite2D>("Urho2D/Tilesets/Platformer/Sprites/metal.png");
         var ballSprite = Resources.Get<Sprite2D>("Urho2D/Tilesets/Platformer/Sprites/shieldGold.png");
-        var ground = scene.CreateChild("Ground");
+        var ground = _scene.CreateChild("Ground");
         ground.SetPosition2D(0.0f, -3.0f);
         ground.SetScale(new Vector3f(200.0f, 1.0f, 1.0f));
         ground.CreateComponent<RigidBody2D>();
         ground.CreateComponent<StaticSprite2D>().Sprite = boxSprite;
         var groundShape = ground.CreateComponent<CollisionBox2D>();
-        groundShape.Size = new Vector2f(0.32f, 0.32f);
+        groundShape.Size = GetSpriteSize(boxSprite);
         groundShape.Friction = 0.5f;
 
-        for (var i = 0; i < 30; ++i)
+        for (var i = 0; i < 24; ++i)
         {
-            var node = scene.CreateChild("RigidBody");
-            node.SetPosition2D(MathDefs.Random(-0.1f, 0.1f), 5.0f + i * 0.4f);
+            var node = _scene.CreateChild("RigidBody");
+            node.SetPosition2D(-3.0f + i % 8 * 0.85f + MathDefs.Random(-0.03f, 0.03f),
+                -1.9f + i / 8 * 0.85f);
             node.CreateComponent<RigidBody2D>().BodyType = BodyType2D.Dynamic;
             var drawable = node.CreateComponent<StaticSprite2D>();
             if (i % 2 == 0)
             {
                 drawable.Sprite = boxSprite;
                 var box = node.CreateComponent<CollisionBox2D>();
-                box.Size = new Vector2f(0.32f, 0.32f);
+                box.Size = GetSpriteSize(boxSprite);
                 SetShapeProperties(box);
             }
             else
             {
                 drawable.Sprite = ballSprite;
-                var circle = node.CreateComponent<CollisionCircle2D>();
-                circle.Radius = 0.16f;
-                SetShapeProperties(circle);
+                var shield = node.CreateComponent<CollisionPolygon2D>();
+                shield.SetVertices([
+                    new Vector2f(-0.18f, 0.25f), new Vector2f(0.18f, 0.25f),
+                    new Vector2f(0.18f, -0.08f), new Vector2f(0.12f, -0.20f),
+                    new Vector2f(0.0f, -0.25f), new Vector2f(-0.12f, -0.20f),
+                    new Vector2f(-0.18f, -0.08f),
+                ]);
+                SetShapeProperties(shield);
             }
         }
 
-        Renderer.SetViewport(0, new Viewport(scene, camera));
+        _mouseJoint = ground.CreateComponent<ConstraintMouse2D>();
+        _mouseJoint.MaxForce = 80.0f;
+        _mouseJoint.FrequencyHz = 5.0f;
+        _mouseJoint.DampingRatio = 0.8f;
+
+        CreateInstructions();
+        Renderer.SetViewport(0, new Viewport(_scene, camera));
         Input.SetMouseMode(MouseMode.Free);
         Input.SetMouseVisible(true);
     }
@@ -110,7 +132,81 @@ public sealed class Physics2D : Application
         var camera = _cameraNode.GetComponent<Camera>()!;
         if (Input.GetKeyDown(Key.PageUp)) camera.SetZoom(camera.Zoom * 1.01f);
         if (Input.GetKeyDown(Key.PageDown)) camera.SetZoom(camera.Zoom * 0.99f);
+
+        if (_mouseJoint!.OtherBody is null && Input.GetMouseButtonPress(MouseButton.Left) &&
+            !ImGui.GetIO().WantCaptureMouse)
+        {
+            var mouse = Input.GetMousePosition();
+            if (_physicsWorld!.GetRigidBody(mouse.X, mouse.Y) is { BodyType: BodyType2D.Dynamic } body)
+            {
+                _mouseJoint.Target = GetMouseWorldPosition(camera);
+                _mouseJoint.OtherBody = body;
+                body.Awake = true;
+            }
+        }
+
+        if (_mouseJoint.OtherBody is not null)
+        {
+            if (Input.GetMouseButtonDown(MouseButton.Left))
+                _mouseJoint.Target = GetMouseWorldPosition(camera);
+            else
+                _mouseJoint.OtherBody = null;
+        }
     }
+
+    private Vector2f GetMouseWorldPosition(Camera camera)
+    {
+        var mouse = Input.GetMousePosition();
+        var world = camera.ScreenToWorldPoint(new Vector3f(mouse.X / (float)Graphics.Width,
+            mouse.Y / (float)Graphics.Height, 10.0f));
+        return new Vector2f(world.X, world.Y);
+    }
+
+    private void CreateInstructions()
+    {
+        Context.RegisterSubsystem(new DearImGui((ImGuiConfigFlags)Engine.Parameters.DearImGuiFlags));
+        SubscribeToEvent<DearImGuiEvents.EndRenderingDearImGuiEvent>(
+            (ref DearImGuiEvents.EndRenderingDearImGuiEvent _) => DrawInstructions());
+        _controlPrompts =
+        [
+            Resources.Get<Texture2D>("ThirdParty/KenneyInputPrompts/keyboard_w.png"),
+            Resources.Get<Texture2D>("ThirdParty/KenneyInputPrompts/keyboard_a.png"),
+            Resources.Get<Texture2D>("ThirdParty/KenneyInputPrompts/keyboard_s.png"),
+            Resources.Get<Texture2D>("ThirdParty/KenneyInputPrompts/keyboard_d.png"),
+            Resources.Get<Texture2D>("ThirdParty/KenneyInputPrompts/keyboard_arrows.png"),
+            Resources.Get<Texture2D>("ThirdParty/KenneyInputPrompts/mouse_left.png"),
+        ];
+    }
+
+    private void DrawInstructions()
+    {
+        var windowOpen = true;
+        ImGui.SetNextWindowPos(new Vector2f(10.0f, 10.0f), ImGuiCond.ImGuiCondAlways);
+        if (ImGui.Begin("Physics 2D"u8, ref windowOpen,
+                ImGuiWindowFlags.ImGuiWindowFlagsNoResize | ImGuiWindowFlags.ImGuiWindowFlagsNoSavedSettings))
+        {
+            for (var i = 0; i < 3; ++i)
+            {
+                ImGui.Image(_controlPrompts![i], PromptIconSize);
+                ImGui.SameLine();
+            }
+            DrawPrompt(_controlPrompts![3], "Move camera"u8);
+            DrawPrompt(_controlPrompts[4], "Zoom (Page Up / Page Down)"u8);
+            DrawPrompt(_controlPrompts[5], "Drag objects"u8);
+        }
+        ImGui.End();
+    }
+
+    private static void DrawPrompt(Texture2D texture, ReadOnlySpan<byte> label)
+    {
+        ImGui.Image(texture, PromptIconSize);
+        ImGui.SameLine();
+        Widgets.AlignTextToLastItem();
+        ImGui.TextUnformatted(label);
+    }
+
+    private static Vector2f GetSpriteSize(Sprite2D sprite) =>
+        new(sprite.Rectangle.Width * Sprite2D.PixelSize, sprite.Rectangle.Height * Sprite2D.PixelSize);
 
     private static void SetShapeProperties(CollisionShape2D shape)
     {

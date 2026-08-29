@@ -126,7 +126,19 @@ public partial class ConstraintMouse2D : Constraint2D
     private float _dampingRatio = 0.7f;
 
     [Serialized("Target")]
-    public Vector2f Target { get => _target; set { _target = value; RecreateJoint(); } }
+    public Vector2f Target
+    {
+        get => _target;
+        set
+        {
+            _target = value;
+            if (Joint is { } joint)
+            {
+                using var target = PhysicsUtils2D.ToB2(value);
+                Box2D.B2MouseJointSetTarget(joint, target);
+            }
+        }
+    }
     [Serialized("Max Force")]
     public float MaxForce { get => _maxForce; set { _maxForce = MathF.Max(value, 0.0f); RecreateJoint(); } }
     [Serialized("Frequency Hz")]
@@ -283,6 +295,11 @@ public partial class ConstraintRope2D : Constraint2D
         def.LocalAnchorBX = anchorB.X;
         def.LocalAnchorBY = anchorB.Y;
         def.Length = MathF.Max(_maxLength, 0.005f);
+        // Box2D treats a distance joint without spring mode as a rigid fixed-length joint,
+        // overriding its limits. Spring mode with zero hertz disables the rest-length spring
+        // while allowing the one-sided maximum-length limit to work as a slack rope.
+        def.EnableSpring = true;
+        def.Hertz = 0.0f;
         def.MinLength = 0.005f;
         def.MaxLength = MathF.Max(_maxLength, 0.005f);
         def.EnableLimit = true;

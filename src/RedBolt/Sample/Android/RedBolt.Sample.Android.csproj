@@ -15,6 +15,7 @@ For a copy, see <https://opensource.org/licenses/MIT> or the accompanying LICENS
   </PropertyGroup>
   <ItemGroup>
     <!-- <redbolt-generated name="android-project-items"> -->
+    <ProjectReference Include="../../../../../RedBolt/src/RedBolt/DearImGui/RedBolt.DearImGui.csproj" />
     <Compile Include="Program.cs" />
     <ProjectReference Include="../../../../../RedBolt.2D/src/RedBolt/2D/RedBolt.2D.csproj" />
     <ProjectReference Include="../../PhysicsBox2D/RedBolt.PhysicsBox2D.csproj" />

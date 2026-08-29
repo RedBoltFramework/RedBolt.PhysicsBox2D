@@ -13,6 +13,8 @@ For a copy, see <https://opensource.org/licenses/MIT> or the accompanying LICENS
   <ItemGroup>
     <Compile Include="../Utilities2D/Sample2D.cs" Link="Utilities2D/Sample2D.cs" />
     <ProjectReference Include="$(RedBoltRoot)/src/RedBolt/Core/RedBolt.Core.csproj" />
+    <ProjectReference Include="$(RedBoltRoot)/src/RedBolt/DearImGui/RedBolt.DearImGui.csproj" />
+    <ProjectReference Include="$(RedBoltRoot)/src/RedBolt/Native/DearImGui/RedBolt.Bindings.DearImGui.csproj" />
     <ProjectReference Include="$(RedBolt2DRoot)/src/RedBolt/2D/RedBolt.2D.csproj" />
     <ProjectReference Include="../../PhysicsBox2D/RedBolt.PhysicsBox2D.csproj" />
   </ItemGroup>
