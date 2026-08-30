@@ -10,12 +10,11 @@ For a copy, see <https://opensource.org/licenses/MIT> or the accompanying LICENS
     <AssemblyName>RedBolt.PhysicsBox2D.Sample.Web</AssemblyName>
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
     <RedBoltExternalWebArchive>$(RedBoltNativeBuildDir)/lib/Release/wasm/RedBolt.PhysicsBox2D.Native.Web.a</RedBoltExternalWebArchive>
-    <RedBoltExternalWebPInvokeModules>RedBolt.Native.Box2D;RedBolt.Native.DearImGui</RedBoltExternalWebPInvokeModules>
+    <RedBoltExternalWebPInvokeModules>RedBolt.Native.Box2D</RedBoltExternalWebPInvokeModules>
     <!-- </redbolt-generated name="web-project-properties"> -->
   </PropertyGroup>
   <ItemGroup>
     <!-- <redbolt-generated name="web-project-items"> -->
-    <ProjectReference Include="../../../../../RedBolt/src/RedBolt/DearImGui/RedBolt.DearImGui.csproj" />
     <Compile Include="Program.cs" />
     <ProjectReference Include="../../../../../RedBolt.2D/src/RedBolt/2D/RedBolt.2D.csproj" />
     <ProjectReference Include="../../PhysicsBox2D/RedBolt.PhysicsBox2D.csproj" />
