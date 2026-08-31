@@ -23,10 +23,10 @@
     "RedBolt.Native.Box2D"
   ],
   "samples": [
-    { "id": "physics2d", "name": "Physics2D", "applicationType": "RedBolt.Sample.Physics2D.Physics2D", "source": "Physics2D", "mobileHelp": "Use the direction pad to pan, drag bodies directly, and use actions to zoom.", "mobileMovement": "wasd", "mobileControls": [{"label": "Zoom in", "key": "PageUp"}, {"label": "Zoom out", "key": "PageDown"}] },
-    { "id": "physics2d-rope", "name": "Physics2D Rope", "applicationType": "RedBolt.Sample.Physics2DRope.Physics2DRope", "source": "Physics2DRope", "mobileHelp": "Drag bodies directly or use the action buttons.", "mobileControls": [{"label": "Reset", "key": "Return"}, {"label": "Debug", "key": "G"}, {"label": "Spawn", "key": "Space"}] },
-    { "id": "physics2d-constraints", "name": "Physics2D Constraints", "applicationType": "RedBolt.Sample.Physics2DConstraints.Physics2DConstraints", "source": "Physics2DConstraints", "mobileHelp": "Use the action buttons to inspect the constraint gallery.", "mobileControls": [{"label": "Reset", "key": "Return"}, {"label": "Debug", "key": "G"}] },
-    { "id": "urho2d-isometric-demo", "name": "Urho2D Isometric Demo", "applicationType": "RedBolt.Sample.Urho2DIsometricDemo.Urho2DIsometricDemo", "source": "Urho2DIsometricDemo", "mobileHelp": "Use the direction pad to move the character.", "mobileMovement": "wasd", "mobileControls": [{"label": "Zoom in", "key": "PageUp"}, {"label": "Zoom out", "key": "PageDown"}, {"label": "Debug", "key": "Z"}] },
-    { "id": "urho2d-platformer", "name": "Urho2D Platformer", "applicationType": "RedBolt.Sample.Urho2DPlatformer.Urho2DPlatformer", "source": "Urho2DPlatformer", "mobileHelp": "Use the left and right controls to move.", "mobileMovement": "arrows", "mobileControls": [{"label": "Jump", "key": "Space"}, {"label": "Restart", "key": "Return"}, {"label": "Debug", "key": "G"}, {"label": "Zoom in", "key": "PageUp"}, {"label": "Zoom out", "key": "PageDown"}] }
+    { "id": "physics2d", "name": "Physics2D", "applicationType": "RedBolt.Sample.Physics2D.Physics2D", "source": "Physics2D" },
+    { "id": "physics2d-rope", "name": "Physics2D Rope", "applicationType": "RedBolt.Sample.Physics2DRope.Physics2DRope", "source": "Physics2DRope" },
+    { "id": "physics2d-constraints", "name": "Physics2D Constraints", "applicationType": "RedBolt.Sample.Physics2DConstraints.Physics2DConstraints", "source": "Physics2DConstraints" },
+    { "id": "urho2d-isometric-demo", "name": "Urho2D Isometric Demo", "applicationType": "RedBolt.Sample.Urho2DIsometricDemo.Urho2DIsometricDemo", "source": "Urho2DIsometricDemo" },
+    { "id": "urho2d-platformer", "name": "Urho2D Platformer", "applicationType": "RedBolt.Sample.Urho2DPlatformer.Urho2DPlatformer", "source": "Urho2DPlatformer" }
   ]
 }
