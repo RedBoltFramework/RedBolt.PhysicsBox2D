@@ -33,6 +33,7 @@ internal static class Physics2DRopeProgram
 /// <summary>Interactive revolute-joint chain constrained by a maximum-length safety cable.</summary>
 public sealed class Physics2DRope : Application
 {
+    private SampleInputMap? _sampleInput;
     private const float AnchorHeight = 15.0f;
     private const float RopeLength = 9.0f;
     private const float RopeMaxLength = 9.2f;
@@ -73,6 +74,11 @@ public sealed class Physics2DRope : Application
 
     protected override void Start()
     {
+        _sampleInput = new SampleInputMap();
+        _sampleInput.AddButton("Reset", Scancode.Return, ControllerButton.A, "RESET");
+        _sampleInput.AddButton("Debug", Scancode.G, ControllerButton.Y, "DEBUG", 1);
+        _sampleInput.AddButton("Launch", Scancode.Space, ControllerButton.X, "LAUNCH", 2);
+        _sampleInput.AddMouseButton("Grab", MouseButton.Left, ControllerButton.B, "GRAB", 3);
         Scene2D.RegisterUrho2DLibrary(Context);
         RedBolt.PhysicsBox2D.Physics2D.RegisterPhysics2DLibrary(Context);
         CreateScene();
@@ -83,11 +89,11 @@ public sealed class Physics2DRope : Application
 
     protected override void Update(float timeStep)
     {
-        if (Input.ExitRequested || Input.GetKeyPress(Key.Escape)) { Exit(); return; }
+        if (Input.ExitRequested || _sampleInput!.Pressed("Exit")) { Exit(); return; }
         if (_cameraNode is null || _world is null || _mouseJoint is null || _payloadBody is null) return;
-        if (Input.GetKeyPress(Key.Return)) ResetExperiment();
-        if (Input.GetKeyPress(Key.G)) _drawDebug = !_drawDebug;
-        if (Input.GetKeyPress(Key.Space))
+        if (_sampleInput.Pressed("Reset")) ResetExperiment();
+        if (_sampleInput.Pressed("Debug")) _drawDebug = !_drawDebug;
+        if (_sampleInput.Pressed("Launch"))
         {
             var direction = _payloadNode!.GetWorldPosition().X >= 0.0f ? -1.0f : 1.0f;
             _payloadBody.LinearVelocity += new Vector2f(direction * 4.0f, 3.0f);
@@ -95,7 +101,7 @@ public sealed class Physics2DRope : Application
         }
 
         var camera = _cameraNode.GetComponent<Camera>()!;
-        if (_mouseJoint.OtherBody is null && Input.GetMouseButtonDown(MouseButton.Left) &&
+        if (_mouseJoint.OtherBody is null && _sampleInput.Evaluate("Grab") > 0.0f &&
             !ImGui.GetIO().WantCaptureMouse)
         {
             var target = GetMouseWorldPosition(camera);
@@ -108,7 +114,7 @@ public sealed class Physics2DRope : Application
         }
         if (_mouseJoint.OtherBody is not null)
         {
-            if (Input.GetMouseButtonDown(MouseButton.Left))
+            if (_sampleInput.Evaluate("Grab") > 0.0f)
                 _mouseJoint.Target = GetMouseWorldPosition(camera);
             else
                 _mouseJoint.OtherBody = null;
@@ -377,4 +383,11 @@ public sealed class Physics2DRope : Application
         new(PromptHeight.Y * texture.Width / texture.Height, PromptHeight.Y);
 
     private static void DrawText(string text) => ImGui.TextUnformatted(System.Text.Encoding.UTF8.GetBytes(text));
+    protected override void Stop()
+    {
+        _sampleInput?.Dispose();
+        _sampleInput = null;
+        base.Stop();
+    }
+
 }

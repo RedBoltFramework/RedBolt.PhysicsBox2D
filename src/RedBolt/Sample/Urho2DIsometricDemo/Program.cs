@@ -29,6 +29,7 @@ internal static class Urho2DIsometricDemoProgram
 /// <summary>Playable isometric TMX, Spriter and Box2D demonstration.</summary>
 public sealed class Urho2DIsometricDemo : Application
 {
+    private SampleInputMap? _sampleInput;
     private Node? _cameraNode;
     private Node? _character;
     private RigidBody2D? _characterBody;
@@ -58,6 +59,11 @@ public sealed class Urho2DIsometricDemo : Application
 
     protected override void Start()
     {
+        _sampleInput = new SampleInputMap(movement: true);
+        _sampleInput.AddButton("Debug", Scancode.F2, ControllerButton.Y, "DEBUG");
+        _sampleInput.Map.MapKeyboardKey("Debug", Scancode.Z);
+        _sampleInput.AddButton("ZoomIn", Scancode.PageUp, ControllerButton.RightShoulder, "+", 1);
+        _sampleInput.AddButton("ZoomOut", Scancode.PageDown, ControllerButton.LeftShoulder, "-", 2);
         Scene2D.RegisterUrho2DLibrary(Context);
         RedBolt.PhysicsBox2D.Physics2D.RegisterPhysics2DLibrary(Context);
         var scene = new Scene();
@@ -101,15 +107,15 @@ public sealed class Urho2DIsometricDemo : Application
 
     protected override void Update(float timeStep)
     {
-        if (Input.ExitRequested || Input.GetKeyPress(Key.Escape)) { Exit(); return; }
-        if (Input.GetKeyPress(Key.F2) || Input.GetKeyPress(Key.Z)) _drawDebug = !_drawDebug;
+        if (Input.ExitRequested || _sampleInput!.Pressed("Exit")) { Exit(); return; }
+        if (_sampleInput.Pressed("Debug")) _drawDebug = !_drawDebug;
         if (_characterBody is null || _character is null || _cameraNode is null) return;
         const float speed = 3.0f;
         var velocity = Vector2f.Zero;
-        if (Input.GetKeyDown(Key.W)) velocity.Y += speed * _verticalSpeedScale;
-        if (Input.GetKeyDown(Key.S)) velocity.Y -= speed * _verticalSpeedScale;
-        if (Input.GetKeyDown(Key.A)) velocity.X -= speed;
-        if (Input.GetKeyDown(Key.D)) velocity.X += speed;
+        velocity.Y += (_sampleInput.Evaluate("Forward") - _sampleInput.Evaluate("Back")) * speed * _verticalSpeedScale;
+
+        velocity.X += (_sampleInput.Evaluate("Right") - _sampleInput.Evaluate("Left")) * speed;
+
         _characterBody.LinearVelocity = velocity;
         if (_characterSprite is not null)
         {
@@ -125,8 +131,8 @@ public sealed class Urho2DIsometricDemo : Application
         }
         _cameraNode.SetPosition(_character.GetWorldPosition() + new Vector3f(0.0f, 0.0f, -10.0f));
         var camera = _cameraNode.GetComponent<Camera>()!;
-        if (Input.GetKeyDown(Key.PageUp)) camera.SetZoom(camera.Zoom * 1.01f);
-        if (Input.GetKeyDown(Key.PageDown)) camera.SetZoom(camera.Zoom * 0.99f);
+        if (_sampleInput.Evaluate("ZoomIn") > 0.0f) camera.SetZoom(camera.Zoom * 1.01f);
+        if (_sampleInput.Evaluate("ZoomOut") > 0.0f) camera.SetZoom(camera.Zoom * 0.99f);
     }
 
     private Sprite2D[][] LoadCharacterFrames(string animation, int count)
@@ -174,4 +180,11 @@ public sealed class Urho2DIsometricDemo : Application
         shape.Restitution = 0.1f;
         return node;
     }
+    protected override void Stop()
+    {
+        _sampleInput?.Dispose();
+        _sampleInput = null;
+        base.Stop();
+    }
+
 }

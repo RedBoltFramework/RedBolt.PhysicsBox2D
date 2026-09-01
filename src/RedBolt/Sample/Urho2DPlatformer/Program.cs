@@ -35,6 +35,7 @@ internal static class Urho2DPlatformerProgram
 /// <summary>Playable orthogonal TMX platformer using Spriter and Box2D.</summary>
 public sealed class Urho2DPlatformer : Application
 {
+    private SampleInputMap? _sampleInput;
     private const float RunSpeed = 4.6f;
     private const float JumpSpeed = 7.2f;
     private const float CoyoteDuration = 0.12f;
@@ -89,6 +90,12 @@ public sealed class Urho2DPlatformer : Application
 
     protected override void Start()
     {
+        _sampleInput = new SampleInputMap(movement: true);
+        _sampleInput.AddButton("Debug", Scancode.G, ControllerButton.Y, "DEBUG", 1);
+        _sampleInput.AddButton("Restart", Scancode.Return, ControllerButton.X, "RESTART", 2);
+        _sampleInput.AddButton("Jump", Scancode.Space, ControllerButton.A, "JUMP");
+        _sampleInput.AddButton("ZoomIn", Scancode.PageUp, ControllerButton.RightShoulder, "+", 3);
+        _sampleInput.AddButton("ZoomOut", Scancode.PageDown, ControllerButton.LeftShoulder, "-", 4);
         Scene2D.RegisterUrho2DLibrary(Context);
         RedBolt.PhysicsBox2D.Physics2D.RegisterPhysics2DLibrary(Context);
         var scene = new Scene();
@@ -151,10 +158,10 @@ public sealed class Urho2DPlatformer : Application
 
     protected override void Update(float timeStep)
     {
-        if (Input.ExitRequested || Input.GetKeyPress(Key.Escape)) { Exit(); return; }
-        if (Input.GetKeyPress(Key.G)) _drawDebug = !_drawDebug;
+        if (Input.ExitRequested || _sampleInput!.Pressed("Exit")) { Exit(); return; }
+        if (_sampleInput.Pressed("Debug")) _drawDebug = !_drawDebug;
         if (_characterBody is null || _character is null || _cameraNode is null) return;
-        if (Input.GetKeyPress(Key.Return)) RestartLevel();
+        if (_sampleInput.Pressed("Restart")) RestartLevel();
         if (_character.GetWorldPosition().Y < -1.0f) BeginDeath();
 
         _messageTimer = MathF.Max(0.0f, _messageTimer - timeStep);
@@ -166,15 +173,15 @@ public sealed class Urho2DPlatformer : Application
         }
         _coyoteTimer = _groundShapes.Count > 0 ? CoyoteDuration : MathF.Max(0.0f, _coyoteTimer - timeStep);
         _jumpBufferTimer = MathF.Max(0.0f, _jumpBufferTimer - timeStep);
-        var spaceDown = Input.GetKeyDown(Key.Space);
-        if (Input.GetKeyPress(Key.Space)) _jumpBufferTimer = JumpBufferDuration;
+        var spaceDown = _sampleInput.Evaluate("Jump") > 0.0f;
+        if (_sampleInput.Pressed("Jump")) _jumpBufferTimer = JumpBufferDuration;
 
         var velocity = _characterBody.LinearVelocity;
         var direction = 0.0f;
         if (!_levelComplete)
         {
-            if (Input.GetKeyDown(Key.A) || Input.GetKeyDown(Key.Left)) direction -= 1.0f;
-            if (Input.GetKeyDown(Key.D) || Input.GetKeyDown(Key.Right)) direction += 1.0f;
+            direction -= _sampleInput.Evaluate("Left");
+            direction += _sampleInput.Evaluate("Right");
         }
         var acceleration = _groundShapes.Count > 0 ? 34.0f : 18.0f;
         velocity.X = MoveTowards(velocity.X, direction * RunSpeed, acceleration * timeStep);
@@ -198,8 +205,8 @@ public sealed class Urho2DPlatformer : Application
         }
 
         var camera = _cameraNode.GetComponent<Camera>()!;
-        if (Input.GetKeyDown(Key.PageUp)) camera.SetZoom(camera.Zoom * 1.01f);
-        if (Input.GetKeyDown(Key.PageDown)) camera.SetZoom(camera.Zoom * 0.99f);
+        if (_sampleInput.Evaluate("ZoomIn") > 0.0f) camera.SetZoom(camera.Zoom * 1.01f);
+        if (_sampleInput.Evaluate("ZoomOut") > 0.0f) camera.SetZoom(camera.Zoom * 0.99f);
         var target = _character.GetWorldPosition() + new Vector3f(velocity.X * 0.38f, 1.35f, -10.0f);
         var halfHeight = camera.OrthoSize / (2.0f * camera.Zoom);
         var halfWidth = halfHeight * Graphics.Width / Graphics.Height;
@@ -456,4 +463,11 @@ public sealed class Urho2DPlatformer : Application
         new(PromptIconSize.Y * texture.Width / texture.Height, PromptIconSize.Y);
 
     private static void DrawText(string text) => ImGui.TextUnformatted(Encoding.UTF8.GetBytes(text));
+    protected override void Stop()
+    {
+        _sampleInput?.Dispose();
+        _sampleInput = null;
+        base.Stop();
+    }
+
 }

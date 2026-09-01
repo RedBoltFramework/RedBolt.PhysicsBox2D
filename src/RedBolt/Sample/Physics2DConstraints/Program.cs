@@ -33,6 +33,7 @@ internal static class Physics2DConstraintsProgram
 /// <summary>Interactive gallery of every 2D constraint supported by Box2D 3.</summary>
 public sealed class Physics2DConstraints : Application
 {
+    private SampleInputMap? _sampleInput;
     private static readonly Color Accent = new(0.25f, 0.85f, 1.0f);
     private static readonly Vector4f HudBackground = new(0.025f, 0.045f, 0.065f, 0.94f);
     private static readonly Vector4f HudBorder = new(0.18f, 0.55f, 0.68f, 0.85f);
@@ -65,6 +66,9 @@ public sealed class Physics2DConstraints : Application
 
     protected override void Start()
     {
+        _sampleInput = new SampleInputMap();
+        _sampleInput.AddButton("Reset", Scancode.Return, ControllerButton.A, "RESET");
+        _sampleInput.AddButton("Debug", Scancode.G, ControllerButton.Y, "DEBUG", 1);
         Scene2D.RegisterUrho2DLibrary(Context);
         RedBolt.PhysicsBox2D.Physics2D.RegisterPhysics2DLibrary(Context);
         CreateScene();
@@ -348,9 +352,9 @@ public sealed class Physics2DConstraints : Application
 
     protected override void Update(float timeStep)
     {
-        if (Input.ExitRequested || Input.GetKeyPress(Key.Escape)) { Exit(); return; }
-        if (Input.GetKeyPress(Key.Return)) ResetGallery();
-        if (Input.GetKeyPress(Key.G)) _drawDebug = !_drawDebug;
+        if (Input.ExitRequested || _sampleInput!.Pressed("Exit")) { Exit(); return; }
+        if (_sampleInput.Pressed("Reset")) ResetGallery();
+        if (_sampleInput.Pressed("Debug")) _drawDebug = !_drawDebug;
 
         _elapsed += timeStep;
         if (_mouseTargetMarker is not null && _mouseConstraint is not null)
@@ -497,4 +501,11 @@ public sealed class Physics2DConstraints : Application
     private record struct BodyState(Node Node, RigidBody2D Body, Vector2f Position, float Rotation,
         Vector2f LinearVelocity = default, float AngularVelocity = 0.0f);
     private sealed record LinkVisual(Node Node, StaticSprite2D Sprite, Node Start, Node End);
+    protected override void Stop()
+    {
+        _sampleInput?.Dispose();
+        _sampleInput = null;
+        base.Stop();
+    }
+
 }
