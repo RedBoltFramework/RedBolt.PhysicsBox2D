@@ -350,13 +350,13 @@ public sealed class Physics2DRope : Application
             ImGui.TextUnformatted("FOUNDRY LOAD TEST  //  REVOLUTE CHAIN + SAFETY CABLE"u8);
             ImGui.PopStyleColor();
             ImGui.Separator();
-            DrawPrompt(_controlPrompts![0], "DRAG"u8);
+            DrawPrompt(SampleInputMap.GetActionPrompt(_controlPrompts![0], ControllerButton.B), "DRAG"u8);
             ImGui.SameLine();
-            DrawPrompt(_controlPrompts[1], "KICK"u8);
+            DrawPrompt(SampleInputMap.GetActionPrompt(_controlPrompts[1], ControllerButton.X), "KICK"u8);
             ImGui.SameLine();
-            DrawPrompt(_controlPrompts[2], "RESET"u8);
+            DrawPrompt(SampleInputMap.GetActionPrompt(_controlPrompts[2], ControllerButton.A), "RESET"u8);
             ImGui.SameLine();
-            DrawPrompt(_controlPrompts[3], "JOINTS"u8);
+            DrawPrompt(SampleInputMap.GetActionPrompt(_controlPrompts[3], ControllerButton.Y), "JOINTS"u8);
             var payload = _payloadNode?.GetWorldPosition() ?? Vector3f.Zero;
             var distance = new Vector2f(payload.X, payload.Y - AnchorHeight).Length;
             var extension = MathF.Max(0.0f, distance - RopeLength);

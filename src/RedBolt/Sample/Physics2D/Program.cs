@@ -190,14 +190,10 @@ public sealed class Physics2D : Application
         if (ImGui.Begin("Physics 2D"u8, ref windowOpen,
                 ImGuiWindowFlags.ImGuiWindowFlagsNoResize | ImGuiWindowFlags.ImGuiWindowFlagsNoSavedSettings))
         {
-            for (var i = 0; i < 3; ++i)
-            {
-                ImGui.Image(_controlPrompts![i], PromptIconSize);
-                ImGui.SameLine();
-            }
-            DrawPrompt(_controlPrompts![3], "Move camera"u8);
-            DrawPrompt(_controlPrompts[4], "Zoom (Page Up / Page Down)"u8);
-            DrawPrompt(_controlPrompts[5], "Drag objects"u8);
+            DrawPrompt(SampleInputMap.GetMovementPrompt(), "Move camera"u8);
+            DrawPrompt(SampleInputMap.GetActionPrompt(_controlPrompts![4], ControllerButton.RightShoulder),
+                "Zoom in / out"u8);
+            DrawPrompt(SampleInputMap.GetActionPrompt(_controlPrompts[5], ControllerButton.A), "Drag objects"u8);
         }
         ImGui.End();
     }

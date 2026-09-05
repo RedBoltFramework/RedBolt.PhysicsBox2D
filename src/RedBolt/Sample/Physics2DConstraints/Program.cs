@@ -460,9 +460,10 @@ public sealed class Physics2DConstraints : Application
             ImGui.SameLine();
             ImGui.TextUnformatted("Nine live joint configurations"u8);
             ImGui.Separator();
-            DrawPrompt(_controlPrompts![0], "RESET"u8);
+            DrawPrompt(SampleInputMap.GetActionPrompt(_controlPrompts![0], ControllerButton.A), "RESET"u8);
             ImGui.SameLine();
-            DrawPrompt(_controlPrompts[1], _drawDebug ? "HIDE JOINTS"u8 : "SHOW JOINTS"u8);
+            DrawPrompt(SampleInputMap.GetActionPrompt(_controlPrompts[1], ControllerButton.Y),
+                _drawDebug ? "HIDE JOINTS"u8 : "SHOW JOINTS"u8);
         }
         ImGui.End();
         ImGui.PopStyleColor(2);
