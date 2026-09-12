@@ -8,5 +8,4 @@ This repository is intentional RedBolt development. It contains the optional Box
 - Preserve the public `RedBolt.PhysicsBox2D` and `RedBolt.Bindings.Box2D` assemblies and namespaces.
 - Use generated SharpCpp bindings for Box2D. Do not add manual native bindings.
 - Keep desktop, WebAssembly, and Android builds working.
-- Build the smallest affected project and run the focused PhysicsBox2D tests after implementation changes.
-- At completion, build the solution, build Web and Android samples, create packages, run focused tests, and review a captured sample screenshot.
+- Follow the monorepo `doc/VERIFICATION.md`: build affected projects and run focused tests; validate affected platform samples and packages when their behavior or integration changes. Run the full supported matrix for release validation or when requested.
