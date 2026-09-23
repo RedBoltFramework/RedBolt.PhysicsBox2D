@@ -124,7 +124,7 @@ endif()
 
 if(NOT EMSCRIPTEN)
     file(GENERATE
-        OUTPUT "${REDBOLT_GENERATED_ROOT}/native-modules/$<CONFIG>/BOX2D.json"
+        OUTPUT "${REDBOLT_GENERATED_ROOT}/native-modules/BOX2D.json"
         CONTENT "{\n  \"module\": \"BOX2D\",\n  \"managedSelector\": \"RedBolt.Bindings.Box2D\",\n  \"nativeLibrary\": \"RedBolt.Native.Box2D\",\n  \"requires\": [],\n  \"requirementClosure\": [],\n  \"artifacts\": [\"$<TARGET_FILE_NAME:redbolt-physics-box2d-native-box2d>\"]\n}\n")
 endif()
 
