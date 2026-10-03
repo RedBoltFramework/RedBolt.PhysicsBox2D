@@ -7,7 +7,8 @@
   "webNative": true,
   "projectReferences": [
     "../RedBolt.2D/src/RedBolt/2D/RedBolt.2D.csproj",
-    "src/RedBolt/PhysicsBox2D/RedBolt.PhysicsBox2D.csproj"
+    "src/RedBolt/PhysicsBox2D/RedBolt.PhysicsBox2D.csproj",
+    "../RedBolt/src/RedBolt/DearImGui/RedBolt.DearImGui.csproj"
   ],
   "additionalSources": [
     "Utilities2D/**/*.cs"
@@ -20,7 +21,8 @@
   ],
   "resourcePackageName": "RedBolt.2D",
   "webPInvokeModules": [
-    "RedBolt.Native.Box2D"
+    "RedBolt.Native.Box2D",
+    "RedBolt.Native.DearImGui"
   ],
   "samples": [
     { "id": "physics2d", "name": "Physics2D", "applicationType": "RedBolt.Sample.Physics2D.Physics2D", "source": "Physics2D" },
