@@ -10,7 +10,12 @@ endif()
 
 file(GLOB_RECURSE REDBOLT_DEPENDENCIES_GENERATOR_INPUTS CONFIGURE_DEPENDS
     "${CMAKE_CURRENT_SOURCE_DIR}/*.cs"
-    "${CMAKE_CURRENT_SOURCE_DIR}/*.csproj")
+    "${CMAKE_CURRENT_SOURCE_DIR}/*.csproj"
+    "${REDBOLT_ROOT}/src/RedBolt/Generator/Dependencies/BindingTargetGenerator.cs"
+    "${REDBOLT_ROOT}/src/RedBolt/Generator/Dependencies/FixedWidthAliasNormalizer.cs"
+    "${REDBOLT_ROOT}/src/RedBolt/Generator/Dependencies/GeneratorOptions.cs")
+
+set(REDBOLT_DEPENDENCIES_GENERATOR_INPUTS "${REDBOLT_DEPENDENCIES_GENERATOR_INPUTS}" CACHE INTERNAL "RedBolt.PhysicsBox2D generator inputs")
 
 set(REDBOLT_BOX2D_GENERATED_DIR "${REDBOLT_NATIVE_GENERATED_DIR}/box2d" CACHE INTERNAL "Box2D binding output")
 set(REDBOLT_BOX2D_BINDINGS_STEM "RedBolt.Bindings.Box2D" CACHE INTERNAL "Box2D binding stem")
