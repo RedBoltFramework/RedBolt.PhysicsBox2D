@@ -54,6 +54,7 @@ include("${REDBOLT_ROOT}/cmake/CPM.cmake")
 set(FETCHCONTENT_BASE_DIR "${CMAKE_BINARY_DIR}/deps")
 
 include("${REDBOLT_ROOT}/cmake/RedBoltSharpCpp.cmake")
+include("${REDBOLT_ROOT}/cmake/RedBoltNativeModuleManifest.cmake")
 
 set(BOX2D_COMPILE_WARNING_AS_ERROR OFF CACHE BOOL "Disable Box2D warnings as errors" FORCE)
 set(BOX2D_DISABLE_SIMD OFF CACHE BOOL "Use Box2D portable SIMD" FORCE)
@@ -122,14 +123,19 @@ if(WIN32)
     set_target_properties(redbolt-physics-box2d-native-box2d PROPERTIES PREFIX "")
 endif()
 
-if(NOT EMSCRIPTEN)
-    file(GENERATE
-        OUTPUT "${REDBOLT_GENERATED_ROOT}/native-modules/BOX2D.json"
-        CONTENT "{\n  \"module\": \"BOX2D\",\n  \"managedSelector\": \"RedBolt.Bindings.Box2D\",\n  \"nativeLibrary\": \"RedBolt.Native.Box2D\",\n  \"requires\": [],\n  \"requirementClosure\": [],\n  \"artifacts\": [\"$<TARGET_FILE_NAME:redbolt-physics-box2d-native-box2d>\"]\n}\n")
-endif()
+redbolt_write_native_module_manifest(
+    MODULE BOX2D
+    TARGET redbolt-physics-box2d-native-box2d
+    SELECTOR RedBolt.Bindings.Box2D
+    LIBRARY_NAME RedBolt.Native.Box2D
+    OUTPUT_DIR "${REDBOLT_GENERATED_ROOT}/native-modules")
 
 add_custom_target(redbolt-physics-box2d-native-all DEPENDS redbolt-physics-box2d-native-box2d)
 add_custom_target(redbolt-physics-box2d-android-native DEPENDS redbolt-physics-box2d-native-box2d)
+if(NOT EMSCRIPTEN)
+    add_dependencies(redbolt-physics-box2d-native-all redbolt-physics-box2d-native-box2d-module)
+    add_dependencies(redbolt-physics-box2d-android-native redbolt-physics-box2d-native-box2d-module)
+endif()
 
 if(EMSCRIPTEN)
     set(REDBOLT_PHYSICS_BOX2D_WASM_ARCHIVE "${CMAKE_BINARY_DIR}/lib/Release/wasm/RedBolt.PhysicsBox2D.Native.Web.a")
