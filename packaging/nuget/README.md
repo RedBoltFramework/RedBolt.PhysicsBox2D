@@ -1,6 +1,6 @@
 # RedBolt.PhysicsBox2D NuGet packages
 
-RedBolt.PhysicsBox2D versions independently from both dependencies, but every package records exact RedBolt and RedBolt.2D package versions. Produce the matching feeds first in `<build root>/package/nuget/RedBolt/out` (`<build root>` is the monorepo `build/` inside the monorepo and the repository's own `build/` standalone; `REDBOLT_BUILD_ROOT` overrides it) and `<build root>/package/nuget/RedBolt.2D/out`.
+RedBolt.PhysicsBox2D versions independently from both dependencies, but every package records exact RedBolt and RedBolt.2D package versions. Produce the matching feeds first in `<build root>/package/nuget/RedBolt/out` (`<build root>` is the `build/` directory beside the engine directory; the packaging script reads `REDBOLT_BUILD_ROOT` to override it) and `<build root>/package/nuget/RedBolt.2D/out`.
 
 Create Linux x64 packages from Release outputs, building the add-on first:
 
